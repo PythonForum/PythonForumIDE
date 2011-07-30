@@ -4,6 +4,7 @@ Created on Wed Jul 27 17:36:42 2011
 
 @author: jakob, David
 """
+import os
 import wx
 from config import config
 from twisted.internet import wxreactor
@@ -24,66 +25,179 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(self, parent,
                               id, 'PF-IDE - 0.1a')
 
-        # Load configuration
-        config_file = config.config_file("default")
-        conf = config.load_config(config_file)
-
-        # Set defaults
-        conf.set_default("indent", 4)
-        conf.set_default("usetab", 0) #0 means false
-        self.conf = conf
-        self.conf.save()
+        self.conf = config.conf
         
-        self.port = get_free_port()        
+        self.port = get_free_port()
         
-        self.notebook = Notebook(self)
-        self.untitled_index = 1
+        sizer= wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(sizer)
+        panel= wx.Panel(self, style= wx.BORDER_THEME)
+        sizer.Add(panel, 1, wx.EXPAND|wx.ALL, 1)
+        panel_sizer= wx.BoxSizer(wx.VERTICAL)
+        panel.SetSizer(panel_sizer)
 
+        self.notebook = Notebook(panel)
+        panel_sizer.Add(self.notebook, 1, wx.EXPAND|wx.ALL, 0)        
+        
         #perhaps open last edited in the future, for now just open new.
-        self.add_editor("untitled.py")
-               
-        #self.notebook.GetRowCount()
-        self.current_editor = self.notebook.editors[self.notebook.GetSelection()]
+        self.notebook.new_editor_tab()
         self.spawn_menus()
-
-    def add_editor(self, filename):
-        """Open an new empty editor instance in a new tab"""
-        editor = Editor(self.notebook)
-        editor.filename = filename
-
-        # Pass along config file
-        editor.conf = self.conf
-
-        self.untitled_index += 1
-
-        self.notebook.editors[self.notebook.GetPageCount()] = editor        
-        self.notebook.AddPage(editor, editor.filename)
+        self.CreateStatusBar()
+        self.Bind(wx.EVT_UPDATE_UI, self._evt_update_ui)
         
-    def on_new(self, event):
-        """Opens a new tab with a new editor instance"""
-        self.add_editor("untitled%s.py" % self.untitled_index)
-
-    def on_open(self, event):
-        editor = Editor(self.notebook)
-        self.notebook.InsertPage(0, editor, editor.filename)
-        editor.open_file()
-
-        # Pass along config file
-        editor.conf = self.conf
-
-        self.notebook.SetSelection(0)
-        self.notebook.SetPageText(0, editor.filename)
-        self.current_editor = self.notebook.editors[0]
+    def _evt_update_ui(self, event):
+        event_id = event.GetId()
+        if event_id== wx.ID_CUT:
+            event.Enable(self.notebook.active_editor_can_cut())
+        elif event_id== wx.ID_COPY:
+            event.Enable(self.notebook.active_editor_can_copy())
+        elif event_id== wx.ID_PASTE:
+            event.Enable(self.notebook.active_editor_can_paste())
+        elif event_id== wx.ID_DELETE:
+            event.Enable(self.notebook.active_editor_can_delete())
+        elif event_id== wx.ID_UNDO:
+            event.Enable(self.notebook.active_editor_can_undo())
+        elif event_id== wx.ID_REDO:
+            event.Enable(self.notebook.active_editor_can_redo())
+        elif event_id== wx.ID_SAVE:
+            event.Enable(self.notebook.active_editor_can_save())
+        elif event_id== wx.ID_SAVEAS:
+            event.Enable(self.notebook.active_editor_can_saveas())
+        else:
+            event.Skip()
    
-    def on_save(self, event):
-        self.current_editor.save_file()
-        self.notebook.SetPageText(self.notebook.GetSelection(), self.current_editor.filename)
+    def spawn_menus(self):
+        """Spawns the menus and sets the bindings to keep __init__ short"""
+        menuBar = wx.MenuBar()
+        fileMenu = wx.Menu()
+        menuBar.Append(fileMenu, "&File")
+        fileMenu.Append(wx.ID_NEW, "New\tCtrl+N")
+        fileMenu.AppendSeparator()
+        fileMenu.Append(wx.ID_OPEN, "Open\tCtrl+O") 
+        fileMenu.AppendSeparator()
+        fileMenu.Append(wx.ID_SAVE, "Save\tCtrl+S")
+        fileMenu.Append(wx.ID_SAVEAS, "Save as")
+        fileMenu.AppendSeparator()
+        fileMenu.Append(wx.ID_CLOSE, "Close\tCtrl+W")
+        fileMenu.Append(wx.ID_CLOSE_ALL, "Exit\tCtrl+Q")
+        
+        editMenu = wx.Menu()
+        menuBar.Append(editMenu, "&Edit")
+        editMenu.Append(wx.ID_UNDO, "Undo\tCtrl+Z")
+        editMenu.Append(wx.ID_REDO, "Redo\tCtrl+Y")
+        editMenu.AppendSeparator()
+        editMenu.Append(wx.ID_CUT, "Cut\tCtrl+X")
+        editMenu.Append(wx.ID_COPY, "Copy\tCtrl+C")
+        editMenu.Append(wx.ID_PASTE, "Paste\tCtrl+V")
+        editMenu.Append(wx.ID_DELETE, "Delete")
+        editMenu.AppendSeparator()
+        editMenu.Append(wx.ID_SELECTALL, "Select All\tCtrl+A")
+        
+        searchMenu = wx.Menu()
+        searchMenu.Append(wx.ID_FIND, "Replace\tCtrl+H")
+        menuBar.Append(searchMenu, "&Search")
+        
+        runMenu = wx.Menu()
+        menuBar.Append(runMenu, "&Run")
+        runMenu.Append(wx.ID_EXECUTE, "Run file\tF5")
+        
+        self.SetMenuBar(menuBar)
+        
+        tb= self.CreateToolBar(wx.TB_HORIZONTAL|wx.NO_BORDER|wx.TB_FLAT)
+        tsize = (24,24)
+        new_bmp =  wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, tsize)
+        open_bmp = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, tsize)
+        save_bmp= wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_TOOLBAR, tsize)
+        save_as_bmp= wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_TOOLBAR, tsize)
+        cut_bmp= wx.ArtProvider.GetBitmap(wx.ART_CUT, wx.ART_TOOLBAR, tsize)
+        copy_bmp = wx.ArtProvider.GetBitmap(wx.ART_COPY, wx.ART_TOOLBAR, tsize)
+        paste_bmp= wx.ArtProvider.GetBitmap(wx.ART_PASTE, wx.ART_TOOLBAR, tsize)
+        undo_bmp= wx.ArtProvider.GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, tsize)
+        redo_bmp= wx.ArtProvider.GetBitmap(wx.ART_REDO, wx.ART_TOOLBAR, tsize)
+        tb.SetToolBitmapSize(tsize)
+        tb.AddLabelTool(wx.ID_NEW, "New", new_bmp, shortHelp="New", longHelp="Create a new file")
+        tb.AddLabelTool(wx.ID_OPEN, "Open", open_bmp, shortHelp="Open", longHelp="Open an exisiting file")
+        tb.AddLabelTool(wx.ID_SAVE, "Save", save_bmp, shortHelp="Save", longHelp="Save the currently active file")
+        tb.AddLabelTool(wx.ID_SAVEAS, "Save as", save_as_bmp, shortHelp="Save as", longHelp="Save the currently active file as something else")
+        tb.AddSeparator()
+        tb.AddSimpleTool(wx.ID_CUT, cut_bmp, "Cut", "Cut selected")
+        tb.AddSimpleTool(wx.ID_COPY, copy_bmp, "Copy", "Copy selected")
+        tb.AddSimpleTool(wx.ID_PASTE, paste_bmp, "Paste", "Paste text")
+        tb.AddSeparator()
+        tb.AddSimpleTool(wx.ID_UNDO, undo_bmp, "Undo", "Undo")
+        tb.AddSimpleTool(wx.ID_REDO, redo_bmp, "Redo", "Redo")
+        tb.Realize()
+        
+        self.Bind(wx.EVT_MENU, self._evt_new, id=wx.ID_NEW)
+        self.Bind(wx.EVT_MENU, self._evt_open, id=wx.ID_OPEN)  
+        self.Bind(wx.EVT_MENU, self._evt_exit, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_MENU, self._evt_save, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self._evt_save_as, id=wx.ID_SAVEAS)
+        self.Bind(wx.EVT_MENU, self._evt_exit, id=wx.ID_CLOSE_ALL)
+        self.Bind(wx.EVT_CLOSE, self._evt_exit)
+        self.Bind(wx.EVT_MENU, self._evt_close_current_editor_tab, id=wx.ID_CLOSE)
+        self.Bind(wx.EVT_MENU, self._evt_undo_current_editor_tab, id=wx.ID_UNDO)
+        self.Bind(wx.EVT_MENU, self._evt_redo_current_editor_tab, id=wx.ID_REDO)
+        self.Bind(wx.EVT_MENU, self._evt_cut_current_editor_tab, id=wx.ID_CUT)
+        self.Bind(wx.EVT_MENU, self._evt_copy_current_editor_tab, id=wx.ID_COPY)
+        self.Bind(wx.EVT_MENU, self._evt_paste_current_editor_tab, id=wx.ID_PASTE)
+        self.Bind(wx.EVT_MENU, self._evt_clear_current_editor_tab, id=wx.ID_DELETE)
+        self.Bind(wx.EVT_MENU, self._evt_selectall_current_editor_tab, id=wx.ID_SELECTALL)
+        self.Bind(wx.EVT_MENU, self._evt_replace_current_editor_tab, id=wx.ID_FIND)
 
-    def on_save_as(self, event):
-        self.current_editor.save_file_as()
-        self.notebook.SetPageText(self.notebook.GetSelection(), self.current_editor.filename)
+    def _evt_new(self, event):
+        """Opens a new tab with a new editor instance"""
+        self.notebook.new_editor_tab()
     
-    def on_exit(self, event):
+    def _evt_open(self, event):
+        """Opens a new tab and ask for a file to load"""
+        self.notebook.open_editor_tab()
+    
+    def _evt_close_current_editor_tab(self, event):
+        """Closes the current editor tab"""
+        self.notebook.close_active_editor()
+        
+    def _evt_save(self, event):
+        """Saves the currently active file"""
+        self.notebook.save_active_editor_tab()
+        
+    def _evt_save_as(self, event):
+        """Save as required filename"""
+        self.notebook.save_as_active_editor_tab()
+    
+    def _evt_undo_current_editor_tab(self, event):
+        """Undo for the current editor tab"""
+        self.notebook.undo_active_editor()
+   
+    def _evt_redo_current_editor_tab(self, event):
+        """Redo for the current editor tab"""
+        self.notebook.redo_active_editor()
+        
+    def _evt_cut_current_editor_tab(self, event):
+        """Cut for the current editor tab"""
+        self.notebook.cut_active_editor()
+        
+    def _evt_copy_current_editor_tab(self, event):
+        """Copy for the current editor tab"""
+        self.notebook.copy_active_editor()
+    
+    def _evt_paste_current_editor_tab(self, event):
+        """paste for the current editor tab"""
+        self.notebook.paste_active_editor()
+        
+    def _evt_clear_current_editor_tab(self, event):
+        """Clear for the current editor tab"""
+        self.notebook.clear_active_editor()
+    
+    def _evt_selectall_current_editor_tab(self, event):
+        """Selectall for the current editor tab"""
+        self.notebook.selectall_active_editor()
+        
+    def _evt_replace_current_editor_tab(self, event):
+        """Replace for the current editor tab"""
+        self.notebook.replace_active_editor()
+        
+    def _evt_exit(self, event):
         dial = wx.MessageDialog(None,'Do you really want to exit?',
                         'Exit Python IDE',
                         wx.YES_NO | wx.ICON_QUESTION)
@@ -91,77 +205,25 @@ class MainFrame(wx.Frame):
         # has changed since last save/load, and if so prompt the user
         # to save before exit.
 
-        f = open("CONFIG", "w")
-        f.write("%s\n%s\n" % (self.GetSize()[0], self.GetSize()[1]))
-        f.close()
+#        f = open("CONFIG", "w")
+#        f.write("%s\n%s\n" % (self.GetSize()[0], self.GetSize()[1]))
+#        f.close()
 
         if dial.ShowModal() == wx.ID_YES:
             self.Destroy()
 
-    def spawn_menus(self):
-        """Spawns the menus and sets the bindings to keep __init__ short"""
-        menuBar = wx.MenuBar()
-        fileMenu = wx.Menu()
-        new_id = wx.NewId()
-        fileMenu.Append(new_id, "New\tCtrl+N")
-        open_id = wx.NewId()
-        fileMenu.AppendSeparator()
-        fileMenu.Append(open_id, "Open\tCtrl+O") 
-        save_id = wx.NewId()
-        fileMenu.AppendSeparator()
-        fileMenu.Append(save_id, "Save\tCtrl+S")
-        save_as_id = wx.NewId()
-        fileMenu.Append(save_as_id, "Save as")
-        close_tab_id = wx.NewId()
-        fileMenu.AppendSeparator()
-        fileMenu.Append(close_tab_id, "Close\tCtrl+W")
-        exit_id = wx.NewId()
-        fileMenu.Append(exit_id, "Exit\tCtrl+Q")
-        menuBar.Append(fileMenu, "&File")
-        editMenu = wx.Menu()
-        undo_id = wx.NewId()
-        editMenu.Append(undo_id, "Undo\tCtrl+Z")
-        redo_id = wx.NewId()
-        editMenu.Append(redo_id, "Redo\tCtrl+Y")
-        editMenu.AppendSeparator()
-        cut_id = wx.NewId()
-        editMenu.Append(cut_id, "Cut\tCtrl+X")
-        copy_id = wx.NewId()
-        editMenu.Append(copy_id, "Copy\tCtrl+C")
-        paste_id = wx.NewId()
-        editMenu.Append(paste_id, "Paste\tCtrl+V")
-        clear_id = wx.NewId()
-        editMenu.Append(clear_id, "Delete")
-        editMenu.AppendSeparator()
-        select_all_id = wx.NewId()
-        editMenu.Append(select_all_id, "Select All\tCtrl+A")
-        menuBar.Append(editMenu, "&Edit")
-        searchMenu = wx.Menu()
-        find_replace_id = wx.NewId()
-        searchMenu.Append(find_replace_id, "Replace\tCtrl+H")
-        menuBar.Append(searchMenu, "&Search")
-        runMenu = wx.Menu()
-        run_id = wx.NewId()
-        runMenu.Append(run_id, "Run file\tF5")
-        menuBar.Append(runMenu, "&Run")
-        self.SetMenuBar(menuBar)
-        
-        self.Bind(wx.EVT_MENU, self.on_new, id=new_id)
-        self.Bind(wx.EVT_MENU, self.on_open, id=open_id)  
-        self.Bind(wx.EVT_MENU, self.on_exit, id=exit_id)
-        self.Bind(wx.EVT_MENU, self.on_save, id=save_id)
-        self.Bind(wx.EVT_MENU, self.on_save_as, id=save_as_id)
-        self.Bind(wx.EVT_MENU, self.on_exit, id=exit_id)
-        self.Bind(wx.EVT_CLOSE, self.on_exit)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_close, id=close_tab_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_undo, id=undo_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_redo, id=redo_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_cut, id=cut_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_copy, id=copy_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_paste, id=paste_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_clear, id=clear_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_select_all, id=select_all_id)
-        self.Bind(wx.EVT_MENU, self.current_editor.on_replace, id=find_replace_id)
+    def get_file(self, prompt, style):
+        """Abstracted method to prompt the user for a file path.
+        Returns a 2-tuple consisting of directory path and file name."""
+        dlg = wx.FileDialog(self, prompt, '.', '', '*.*', style)
+        if dlg.ShowModal() == wx.ID_OK:
+            dirname = dlg.GetDirectory()
+            filename = dlg.GetFilename()
+        else:
+            # so maybe add error handling here.
+            raise RuntimeError("I guess something has gone wrong with the dialog")
+        dlg.Destroy()
+        return dirname, filename
 
 class ListenProtocol(Protocol):
     def connectionMade(self):
