@@ -1,8 +1,9 @@
-'''
+"""
 Created on 31 Jul 2011
 
-@author: D.W.
-'''
+@author: D.W., david
+@reviewr: david
+"""
 
 import wx
 import gui_lib.ide_mainframe as ide_mainframe
@@ -19,10 +20,9 @@ from utils.version import get_free_port
 from utils.interpreter import spawn_python
 
 class Wx_App(wx.App):
+    """Sets the editor up and the ports""" #Not sure if correct description
     def __init__(self, *args, **kwargs):
-        '''
-        Creates a wx App
-        '''
+        """Creates a wx App"""
         super(Wx_App, self).__init__(*args, **kwargs)
         self._create_config()
         self._create_port()
@@ -30,24 +30,18 @@ class Wx_App(wx.App):
         self._create_mainframe()
         
     def _create_config(self):
-        '''
-        Set up config
-        '''
+        """Set up config"""
         self.config = Ide_config()
         
     def _create_port(self):
-        '''
-        Creates a free port
-        '''
+        """Creates a free port"""
         self._port = get_free_port()
         
     def get_port(self):
         return self._port
     
     def _set_up_reactor(self):
-        '''
-        Set's up the reactor
-        '''
+        """Set's up the reactor"""
         reactor.registerWxApp(self)
         reactor.listenTCP(self._port, ListenFactory())
         reactor.spawnProcess(*spawn_python())
@@ -61,9 +55,7 @@ class Wx_App(wx.App):
         reactor.run()
         
     def _create_mainframe(self):
-        '''
-        Creates the mainframe
-        '''
+        """Creates the mainframe"""
         self.mainframe = ide_mainframe.MainFrame(None, title='PF-IDE - 0.1a')
         ide_mainframe_events.MainFrameEvents(self.mainframe)
         
@@ -85,5 +77,3 @@ class ListenFactory(Factory):
 if __name__ == '__main__':
     wx_app = Wx_App(False)
     wx_app.start_reactor()
-        
-        
