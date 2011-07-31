@@ -1,11 +1,12 @@
-'''
+"""
 Created on 31 Jul 2011
 
 @author: D.W.
-'''
+"""
 
 import wx
 import ide_constant as ide
+from ide_mainframe import MainFrame
 
 class MainFrameEvents(object):
     def __init__(self, view, model= None):
@@ -33,7 +34,8 @@ class MainFrameEvents(object):
         self.view.Bind(wx.EVT_MENU, self._on_editor_delete, id=ide.ID_DELETE)
         self.view.Bind(wx.EVT_MENU, self._on_editor_selectall, id=ide.ID_SELECTALL)
         self.view.Bind(wx.EVT_MENU, self._on_editor_search_and_replace, id=ide.ID_SEARCH)
-        
+        self.view.Bind(wx.EVT_MENU, MainFrame.on_run, id=ide.ID_RUNFILE)        
+    
     def _on_new(self, event):
         """Opens a new tab with a new editor instance"""
         self.view.notebook.new_editor_tab()
@@ -85,7 +87,7 @@ class MainFrameEvents(object):
     def _on_editor_search_and_replace(self, event):
         """Replace for the current editor tab"""
         self.view.notebook.replace_active_editor()
-        
+    
     def _on_exit(self, event):
         """ application wants to exit"""
         self.view.on_exit()

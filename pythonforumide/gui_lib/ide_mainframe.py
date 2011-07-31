@@ -16,7 +16,7 @@ from ide_notebook_events import NotebookEvents
 class MainFrame(wx.Frame):
     """Class with the GUI and GUI functions"""
 
-    def __init__(self,*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Creates the frame, calls some construction methods."""
         wx.Frame.__init__(self, *args, **kwargs)
         self.config= wx.GetApp().config
@@ -70,8 +70,6 @@ class MainFrame(wx.Frame):
         perhaps open last edited in the future, for now just open new.
         '''
         self.notebook.new_editor_tab()
-
-
         
     def on_exit(self):
         '''
@@ -87,12 +85,8 @@ class MainFrame(wx.Frame):
         self.config["MainFrame.Width"]= self.GetSize()[0]
         self.config["MainFrame.Height"]= self.GetSize()[1]
         
-#        f = open("CONFIG", "w")
-#        f.write("%s\n%s\n" % (self.GetSize()[0], self.GetSize()[1]))
-#        f.close()
-
         if dial.ShowModal() == wx.ID_YES:
-            self.Destroy()
+             self.Destroy()
 
     def get_file(self, prompt, style):
         """Abstracted method to prompt the user for a file path.
@@ -106,6 +100,13 @@ class MainFrame(wx.Frame):
             raise RuntimeError("I guess something has gone wrong with the dialog")
         dlg.Destroy()
         return dirname, filename
+
+    def on_run(self, event):   
+        from ide_outputframe import OutputFrame
+        output_app = wx.PySimpleApp()
+        output_frame = OutputFrame(parent = None, title="")        
+        output_frame.Show()
+        output_app.MainLoop()
 
 if __name__=='__main__':
     import ide_test_app as wx_app
