@@ -2,7 +2,7 @@
 Created on 31 Jul 2011
 
 @author: D.W., david
-@reviewr: david
+@reviewer: david
 """
 
 import wx
