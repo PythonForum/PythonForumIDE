@@ -129,7 +129,6 @@ class Ide_config(object):
     def __init__(self, filepath= "", filename= "Ide_Config"):
         if not filepath:
             filepath= os.path.dirname(__file__)
-            #filepath= filepath.rsplit("\\", 1)[0]
         self._filepath = filepath
         self._filename = filename
         self._fullpath= None
