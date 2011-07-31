@@ -6,6 +6,16 @@ Created on 31 Jul 2011
 
 import wx
 
+class MissingArt(object):
+    def __init__(self, f):
+        self.f = f
+        
+    def __call__(self):
+        try:
+            return self.f()
+        except AttributeError:
+            return wx.NullBitmap
+
 def get_icon_new():
     '''
     Returns a (24,24) new icon bmp
@@ -60,6 +70,7 @@ def get_icon_redo():
     '''
     return _get_art_bmp(wx.ART_REDO)
 
+@MissingArt
 def get_icon_close():
     '''
     Returns a (24,24) close icon bmp
