@@ -128,8 +128,8 @@ else: # Otherwise we point to the ugly one
 class Ide_config(object):
     def __init__(self, filepath= "", filename= "Ide_Config"):
         if not filepath:
-            filepath= os.path.splitext(__file__)[0]
-            filepath= filepath.rsplit("\\", 1)[0]
+            filepath= os.path.dirname(__file__)
+            #filepath= filepath.rsplit("\\", 1)[0]
         self._filepath = filepath
         self._filename = filename
         self._fullpath= None
@@ -138,9 +138,10 @@ class Ide_config(object):
         self._get_defaults()
         
     def _get_file_fullpath(self):
-        ext= ".cfg"
         if has_yaml:
             ext= ".yaml"
+        else:
+            ext= ".cfg"
         self._fullpath= os.path.join(self._filepath, self._filename)+ext
         if not os.path.exists(self._fullpath):
              a= file(self._fullpath, "w")

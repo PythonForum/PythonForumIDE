@@ -6,7 +6,7 @@ Created on 31 Jul 2011
 
 import wx
 import ide_constant as ide
-from pythonforumide.ide_images import menu_icons
+from ide_images import menu_icons
 
 
 class ToolBar(wx.ToolBar):
