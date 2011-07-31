@@ -138,10 +138,13 @@ class Notebook(aui.AuiNotebook):
         
     def active_editor_can_delete(self):
         """Returns True if the active editor can delete"""
-        if self._active_editor_page:
-            return self._active_editor_page.HasSelection()
-        else:
-            return False
+        try:
+            if self._active_editor_page:
+                return self._active_editor_page.HasSelection()
+            else:
+                return False
+        except AttributeError:
+            return True
     
     
     def active_editor_can_undo(self):
