@@ -83,6 +83,7 @@ class _UglyConfig(object):
     rely on ConfigParser."""
     def __init__(self, profile):
         filename = profile + ".cfg"
+        filename= profile
 
         self.config = ConfigParser.ConfigParser()
         try:
@@ -124,12 +125,51 @@ else: # Otherwise we point to the ugly one
 #This way the importers use the config the same way, same api but under the 
 #hood they are different.
 
-# Load configuration
-config_file = config_file("default")
-conf = load_config(config_file)
+class Ide_config(object):
+    def __init__(self, filepath= "", filename= "Ide_Config"):
+        if not filepath:
+            filepath= os.path.splitext(__file__)[0]
+            filepath= filepath.rsplit("\\", 1)[0]
+        self._filepath = filepath
+        self._filename = filename
+        self._fullpath= None
+        self._data= {}
+        self._get_file_fullpath()
+        self._get_defaults()
+        
+    def _get_file_fullpath(self):
+        ext= ".cfg"
+        if has_yaml:
+            ext= ".yaml"
+        self._fullpath= os.path.join(self._filepath, self._filename)+ext
+        if not os.path.exists(self._fullpath):
+             a= file(self._fullpath, "w")
+             a.close()
+        print ("Config useing filepath: %s" % (self._fullpath))
+             
+    def _get_defaults(self):
+        confile= Config(self._fullpath)
+        self._data["indent"]= confile["indent"] or 4
+        self._data["usetab"]= confile["usetab"] or 0
+        self._data["MainFrame.Height"] = confile["MainFrame.Height"] or 600
+        self._data["MainFrame.Width"] = confile["MainFrame.Width"] or 600
+        confile.file.close()
+        
+    def __setitem__(self, key, value):
+        self._data[key]= value
+        
+    def __getitem__(self, key):
+        return self._data[key]
+        
+    def update_configfile(self):
+        confile= Config(self._fullpath)
+        for key, value in self._data.iteritems():
+            confile[key]= value
+        confile.save()
+        confile.file.close()
 
-# Set defaults
-conf.set_default("indent", 4)
-conf.set_default("usetab", 0) #0 means false
-
-conf.save()
+if __name__ == '__main__':
+    ide_config= Ide_config()
+    print (ide_config["indent"])
+    ide_config.update_configfile()
+    

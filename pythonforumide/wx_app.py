@@ -7,8 +7,9 @@ Created on 31 Jul 2011
 import wx
 import gui_lib.ide_mainframe as ide_mainframe
 import gui_lib.ide_mainframe_events as ide_mainframe_events
+from pythonforumide.config.config import Ide_config
 
-from config import config
+#import config.config.Ide_config as Ide_config
 from twisted.internet import wxreactor
 wxreactor.install()
 
@@ -23,9 +24,16 @@ class Wx_App(wx.App):
         Creates a wx App
         '''
         super(Wx_App, self).__init__(*args, **kwargs)
+        self._create_config()
         self._create_port()
         self._set_up_reactor()
         self._create_mainframe()
+        
+    def _create_config(self):
+        '''
+        Set up config
+        '''
+        self.config = Ide_config()
         
     def _create_port(self):
         '''
@@ -49,16 +57,19 @@ class Wx_App(wx.App):
         '''
         Sarts the reactor
         '''
-        print "Port: %s" %(self.get_port())
+        print "Port: %s" % (self.get_port())
         reactor.run()
-        
         
     def _create_mainframe(self):
         '''
         Creates the mainframe
         '''
-        self.mainframe= ide_mainframe.MainFrame(None, title= 'PF-IDE - 0.1a')
+        self.mainframe = ide_mainframe.MainFrame(None, title='PF-IDE - 0.1a')
         ide_mainframe_events.MainFrameEvents(self.mainframe)
+        
+    def OnExit(self):
+        print ("App closing")
+        self.config.update_configfile()
         
         
 class ListenProtocol(Protocol):
@@ -72,7 +83,7 @@ class ListenFactory(Factory):
     protocol = ListenProtocol
     
 if __name__ == '__main__':
-    wx_app= Wx_App(False)
+    wx_app = Wx_App(False)
     wx_app.start_reactor()
         
         

@@ -165,10 +165,34 @@ class Notebook(aui.AuiNotebook):
             return True
         else:
             return False
+        
+    def active_editor_can_close_tab(self):
+        """Returns True if the active editor can close"""
+        if self._active_editor_page:
+            return True
+        else:
+            return False
+        
+    def active_editor_can_search(self):
+        """Returns True if the active editor can search"""
+        if self._active_editor_page:
+            return True
+        else:
+            return False
+    
+    def active_editor_can_run(self):
+        """Returns True if the active editor can search"""
+        if self._active_editor_page:
+            return True
+        else:
+            return False
+        
+    
 
 if __name__=='__main__':
+    import ide_test_app as wx_app
     import ide_test_frame 
-    app = wx.PySimpleApp(False)
+    app = wx_app.Wx_App(False)
     frame= ide_test_frame.TestFrame(None, title= "Testing notebook without events")
     panel= ide_test_frame.TestPanel(frame)
     frame.sizer.Add(panel, 1, wx.EXPAND)

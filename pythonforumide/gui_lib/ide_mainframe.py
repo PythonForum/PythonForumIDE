@@ -19,7 +19,10 @@ class MainFrame(wx.Frame):
     def __init__(self,*args, **kwargs):
         """Creates the frame, calls some construction methods."""
         wx.Frame.__init__(self, *args, **kwargs)
+        self.config= wx.GetApp().config
         self.SetInitialSize((600,600))
+        self.SetSize((int(self.config["MainFrame.Width"]),
+                           int(self.config["MainFrame.Height"])))
         self.Center(wx.BOTH)
         self.CreateStatusBar()
         self.frame_sizer= wx.BoxSizer(wx.VERTICAL)
@@ -76,7 +79,10 @@ class MainFrame(wx.Frame):
         # TODO: we also need to work in a way of detecting if a file
         # has changed since last save/load, and if so prompt the user
         # to save before exit.
-
+        
+        self.config["MainFrame.Width"]= self.GetSize()[0]
+        self.config["MainFrame.Height"]= self.GetSize()[1]
+        
 #        f = open("CONFIG", "w")
 #        f.write("%s\n%s\n" % (self.GetSize()[0], self.GetSize()[1]))
 #        f.close()
@@ -98,6 +104,7 @@ class MainFrame(wx.Frame):
         return dirname, filename
 
 if __name__=='__main__':
-    app = wx.PySimpleApp(False)
+    import ide_test_app as wx_app
+    app = wx_app.Wx_App(False)
     MainFrame(None, title= "Testing main frame with no events")
     app.MainLoop()

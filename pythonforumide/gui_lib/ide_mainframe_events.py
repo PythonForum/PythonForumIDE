@@ -12,7 +12,7 @@ class MainFrameEvents(object):
         self.view = view
         self.model = model
         self._create_binds()
-        
+      
     def _create_binds(self):
         '''
         Create binds
@@ -64,7 +64,7 @@ class MainFrameEvents(object):
         
     def _on_editor_cut(self, event):
         """Cut for the current editor tab"""
-        self.notebook.cut_active_editor()
+        self.view.notebook.cut_active_editor()
         
     def _on_editor_copy(self, event):
         """Copy for the current editor tab"""
@@ -111,6 +111,12 @@ class MainFrameEvents(object):
             event.Enable(self.view.notebook.active_editor_can_save())
         elif event_id== ide.ID_SAVEAS:
             event.Enable(self.view.notebook.active_editor_can_saveas())
+        elif event_id== ide.ID_CLOSETAB:
+            event.Enable(self.view.notebook.active_editor_can_close_tab())
+        elif event_id== ide.ID_SEARCH:
+            event.Enable(self.view.notebook.active_editor_can_search())
+        elif event_id== ide.ID_RUNFILE:
+            event.Enable(self.view.notebook.active_editor_can_run())
         else:
             event.Skip()
         

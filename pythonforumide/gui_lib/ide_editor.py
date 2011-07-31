@@ -10,7 +10,6 @@ sys.path.append('..')
 from utils.textutils import split_comments
 import wx.stc as stc
 import wx
-from config import config
 
 #TODO: make customisable font and sizes. Perhaps maked this named tuple?
 faces = { 'times': 'Times',
@@ -25,7 +24,7 @@ class Editor(stc.StyledTextCtrl):
     def __init__(self, parent):
         super(Editor, self).__init__(parent)
 
-        self.conf= config.conf
+        self.conf= wx.GetApp().config
 
         self.filepath = ''
         self.indent_level = 0        
@@ -190,8 +189,9 @@ class Editor(stc.StyledTextCtrl):
 
 
 if __name__=='__main__':
+    import ide_test_app as wx_app
     import ide_test_frame 
-    app = wx.PySimpleApp(False)
+    app = wx_app.Wx_App(False)
     frame= ide_test_frame.TestFrame(None, title= "Testing editor")
     panel= ide_test_frame.TestPanel(frame)
     frame.sizer.Add(panel, 1, wx.EXPAND)
