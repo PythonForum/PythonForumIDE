@@ -8,7 +8,7 @@ Created on 31 Jul 2011
 import wx
 import gui_lib.ide_mainframe as ide_mainframe
 import gui_lib.ide_mainframe_events as ide_mainframe_events
-from pythonforumide.config.config import Ide_config
+from config.config import Ide_config
 
 #import config.config.Ide_config as Ide_config
 from twisted.internet import wxreactor
