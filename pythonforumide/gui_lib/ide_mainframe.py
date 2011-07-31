@@ -29,12 +29,16 @@ class MainFrame(wx.Frame):
         self.SetSizer(self.frame_sizer)
         self.frame_panel= wx.Panel(self, style= wx.BORDER_THEME)
         self.frame_sizer.Add(self.frame_panel, 1, wx.EXPAND|wx.ALL, 1)
+        
         self.panel_sizer= wx.BoxSizer(wx.VERTICAL)
         self.frame_panel.SetSizer(self.panel_sizer)
-
+        
+    
+        self._create_notebook_panel()
+        
         self._create_menu()
         self._create_toolbar()
-        self._create_notebook_panel()
+#        self._create_notebook_panel()
         self._start_up()
         self.Layout()
         self.Show()
