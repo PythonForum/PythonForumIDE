@@ -111,17 +111,23 @@ class Notebook(aui.AuiNotebook):
           
     def active_editor_can_cut(self):
         """Returns True if the active editor can cut"""
-        if self._active_editor_page:
-            return self._active_editor_page.CanCut()
-        else:
-            return False
+        try:
+            if self._active_editor_page:
+                return self._active_editor_page.CanCut()
+            else:
+                return False
+        except AttributeError:
+            return True
     
     def active_editor_can_copy(self):
         """Returns True if the active editor can copy"""
-        if self._active_editor_page:
-            return self._active_editor_page.CanCopy()
-        else:
-            return False
+        try:
+            if self._active_editor_page:
+                return self._active_editor_page.CanCopy()
+            else:
+                return False
+        except AttributeError:
+            return True
     
     def active_editor_can_paste(self):
         """Returns True if the active editor can paste"""

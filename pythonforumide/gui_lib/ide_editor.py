@@ -187,7 +187,6 @@ class Editor(stc.StyledTextCtrl):
         """Displays a find/replace dialog"""
         #I think we should create a new frame for this, to be coded yet
 
-
 if __name__=='__main__':
     import ide_test_app as wx_app
     import ide_test_frame 
