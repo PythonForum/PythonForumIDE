@@ -60,11 +60,14 @@ class Wx_App(wx.App):
         ide_mainframe_events.MainFrameEvents(self.mainframe)
         
     def OnExit(self):
+        """Handles the event that closes the IDE"""
         print ("App closing")
         self.config.update_configfile()
         
         
 class ListenProtocol(Protocol):
+    """Handles connections"""
+    #The name of the following functions is not ok according to PEP-8
     def connectionMade(self):
         print "Got connection!!!!"
         
