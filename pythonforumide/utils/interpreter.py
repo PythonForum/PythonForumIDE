@@ -24,7 +24,7 @@ class PythonProcessProtocol(ProcessProtocol):
         self.frame.WriteText(data)
         print "Got stdout."
     
-    def errRecieved(self, data):
+    def errReceived(self, data):
         print "Got stderr!"
         self.frame.Newline()
         self.frame.BeginTextColour("Red")
