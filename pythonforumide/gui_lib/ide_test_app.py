@@ -18,5 +18,6 @@ class Wx_App(wx.App):
         self.config= Ide_config()
   
     def OnExit(self):
+        """Handles the frame closing function"""
         print ("App closing")
         self.config.update_configfile()
