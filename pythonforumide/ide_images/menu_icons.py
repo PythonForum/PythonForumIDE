@@ -7,7 +7,9 @@ Created on 31 Jul 2011
 import wx
 
 class MissingArt(object):
-    """Handles missing icons"""
+    """Sometimes wx doesn't have some attributes, this is caused with different
+    wx versions, this decorator wraps each function call in a try/except and
+    returns NullBitmap for everything that is not an attribute of wx."""
     def __init__(self, f):
         self.f = f
         
@@ -17,34 +19,42 @@ class MissingArt(object):
         except AttributeError:
             return wx.NullBitmap
 
+@MissingArt
 def get_icon_new():
     """Returns a (24,24) new icon bmp"""
     return _get_art_bmp(wx.ART_NEW)
 
+@MissingArt
 def get_icon_open():
     """Returns a (24,24) open icon bmp"""
     return _get_art_bmp(wx.ART_FILE_OPEN)
 
+@MissingArt
 def get_icon_save():
     """"Returns a (24,24) save icon bmp"""
     return _get_art_bmp(wx.ART_FILE_SAVE)
 
+@MissingArt
 def get_icon_saveas():
     """Returns a (24,24) saveas icon bmp"""
     return _get_art_bmp(wx.ART_FILE_SAVE_AS)
 
+@MissingArt
 def get_icon_cut():
     """Returns a (24,24) cut icon bmp"""
     return _get_art_bmp(wx.ART_CUT)
 
+@MissingArt
 def get_icon_copy():
     """Returns a (24,24) copy icon bmp"""
     return _get_art_bmp(wx.ART_COPY)
 
+@MissingArt
 def get_icon_paste():
     """Returns a (24,24) paste icon bmp"""
     return _get_art_bmp(wx.ART_PASTE)
 
+@MissingArt
 def get_icon_undo():
     """Returns a (24,24) undo icon bmp"""
     return _get_art_bmp(wx.ART_UNDO)
@@ -58,14 +68,17 @@ def get_icon_close():
     """Returns a (24,24) close icon bmp"""
     return _get_art_bmp(wx.ART_CLOSE)
 
+@MissingArt
 def get_icon_quit():
     """Returns a (24,24) quit icon bmp"""
     return _get_art_bmp(wx.ART_QUIT)
 
+@MissingArt
 def get_icon_delete():
     """Returns a (24,24) delete icon bmp"""
     return _get_art_bmp(wx.ART_DELETE)
 
+@MissingArt
 def get_find_and_replace():
     """Returns a (24,24) find and replace icon bmp"""
     return _get_art_bmp(wx.ART_FIND_AND_REPLACE)
