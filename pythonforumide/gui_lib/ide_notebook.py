@@ -2,7 +2,8 @@
 """
 Created on Wed Jul 27 17:36:42 2011
 
-@author: jakob, David
+@author: jakob, David, confab
+@reviewer: ghoulmaster
 """
 
 import os

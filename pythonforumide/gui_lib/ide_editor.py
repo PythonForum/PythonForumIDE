@@ -1,6 +1,6 @@
 """
-@author: Jakob, David, bunburya
-@reviewer: Somelauw
+@author: Jakob, David, bunburya, confab
+@reviewer: Somelauw, ghoulmaster
 """
 
 #YES DIRT HACK GET OVER IT. Dont remove it might go before it goes into master
