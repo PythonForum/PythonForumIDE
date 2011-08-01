@@ -212,7 +212,7 @@ class Editor(stc.StyledTextCtrl):
         reactor = wx.GetApp().this_reactor        
         
         run_editor = TestFrame(wx.GetApp().TopWindow, title="")
-        run_panel = wx.richtext.RichTextCtrl(run_editor)
+        run_panel = wx.richtext.RichTextCtrl(run_editor, style=wx.TE_READONLY)
         run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
         run_editor.Layout()
         
