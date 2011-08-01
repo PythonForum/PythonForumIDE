@@ -8,8 +8,16 @@ import sys
 sys.path.append('..')
 
 from utils.textutils import split_comments
+from utils.interpreter import PythonProcessProtocol
+from utils.version import get_python_exe
 import wx.stc as stc
+import os.path
 import wx
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
 
 from ide_test_frame import TestFrame, TestPanel
 
@@ -28,7 +36,7 @@ class Editor(stc.StyledTextCtrl):
         """Starts the editor and calls some editor-related functions"""
         super(Editor, self).__init__(parent)
 
-        self.conf= wx.GetApp().config
+        self.conf = wx.GetApp().config
 
         self.filepath = ''
         self.indent_level = 0        
@@ -198,14 +206,30 @@ class Editor(stc.StyledTextCtrl):
 
     def on_run(self):
         """Runs selected code in a new window."""
-
         # Create a test frame and hook into the caller.
         # Allows this frame to be destroyed by the main window on close.
+        reactor = wx.GetApp().this_reactor        
+        
         run_editor = TestFrame(wx.GetApp().TopWindow, title="")
         run_panel = wx.TextCtrl(run_editor)
         run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
         run_editor.Layout()
-
+        
+        if self.filepath:
+            run_panel.WriteText("Running %s." % os.path.split(self.filepath)[-1]
+            reactor.spawnProcess(PythonProcessProtocol(run_panel), 
+                                          get_python_exe(), 
+                                            ["python", str(self.filepath)])
+        else:
+            run_panel.WriteText("Running unsaved script.")
+            script = StringIO()
+            script.write(self.GetText())
+            script.seek(0)
+            reactor.spawnProcess(PythonProcessProtocol(run_panel), 
+                                          get_python_exe(), 
+                                            ["python", "-c", script.read()])
+        
+        
         return run_panel
 
 if __name__=='__main__':

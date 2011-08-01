@@ -4,11 +4,9 @@ Created on Wed Jul 27 17:36:42 2011
 
 @author: jakob, David, confab
 """
-import os
 import wx
 import gui_lib.ide_menu as ide_menu
 import gui_lib.ide_toolbar as ide_toolbar
-import gui_lib.ide_constant as ide
 from ide_notebook import Notebook
 from ide_notebook_events import NotebookEvents
 
@@ -56,7 +54,7 @@ class MainFrame(wx.Frame):
         self.notebook = Notebook(self.frame_panel)
         NotebookEvents(self.notebook)
         self.panel_sizer.Add(self.notebook, 1, wx.EXPAND|wx.ALL, 0)
-              
+          
     def _start_up(self):
         '''
         Adds a new blank editor tab
@@ -91,21 +89,6 @@ class MainFrame(wx.Frame):
             raise RuntimeError("Something has gone wrong with the dialog")
         dlg.Destroy()
         return dirname, filename
-
-    def on_run(self, event):
-        """Supposedly handles the Run Event"""
-        #Not working, this is being done somewhere else (confab made it)
-        
-        # Sorry bro, but if you actually read the history of the file
-        # you'd see that this comment is my [confab] first commit.
-        # Look at commit 63ebce0f6a9f331167e4 before you blame me for
-        # something else again.
-        
-        from ide_outputframe import OutputFrame
-        output_app = wx.PySimpleApp()
-        output_frame = OutputFrame(parent = None, title="")        
-        output_frame.Show()
-        output_app.MainLoop()
 
 if __name__=='__main__':
     import ide_test_app as wx_app

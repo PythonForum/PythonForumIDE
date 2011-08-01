@@ -8,7 +8,6 @@ import sys
 sys.path.append('..')
 
 from twisted.internet.protocol import ProcessProtocol
-from utils.version import get_python_exe
 
 class PythonProcessProtocol(ProcessProtocol):       
     def __init__(self, frame):
@@ -16,13 +15,10 @@ class PythonProcessProtocol(ProcessProtocol):
         
     def connectionMade(self):
         print "subprocess open.!"
-        self.transport.write("2+2")
         
     def outReceived(self, data):
+        self.frame.WriteText(data)
         print "Got stdout."
     
     def errRecieved(self, data):
         print "Got stderr!"
-
-def spawn_python():
-    return [PythonProcessProtocol(None), get_python_exe(), ["python"]]

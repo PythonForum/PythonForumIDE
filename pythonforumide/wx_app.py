@@ -17,7 +17,6 @@ wxreactor.install()
 from twisted.internet import reactor
 from twisted.internet.protocol import Factory, Protocol
 from utils.version import get_free_port
-from utils.interpreter import spawn_python
 
 class Wx_App(wx.App):
     """Sets the editor up and the ports""" #Not sure if correct description
@@ -44,14 +43,13 @@ class Wx_App(wx.App):
         """Set's up the reactor"""
         reactor.registerWxApp(self)
         reactor.listenTCP(self._port, ListenFactory())
-        reactor.spawnProcess(*spawn_python())
         #frame.Maximize() #Left commented to stop it getting on my nerves.
         
     def start_reactor(self):
-        '''
-        Sarts the reactor
-        '''
+        """
+        Starts the reactor, bind a reference to it locally."""
         print "Port: %s" % (self.get_port())
+        self.this_reactor = reactor
         reactor.run()
         
     def _create_mainframe(self):
