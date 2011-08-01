@@ -125,7 +125,7 @@ class Editor(stc.StyledTextCtrl):
         """Handles smart indentation for the editor"""
         # Read settings from the config file
         indent_amount = int(self.conf["indent"])
-        usetab = int(self.conf["usetab"])
+        usetab = self.conf["usetab"]
 
         last_line_no = self.GetCurrentLine()
         last_line = split_comments(self.GetLine(last_line_no))[0]
