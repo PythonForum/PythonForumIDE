@@ -205,6 +205,17 @@ class Editor(stc.StyledTextCtrl):
         #I think we should create a new frame for this, to be coded yet
         pass
 
+    def is_saved(self):
+        """Checks if the current file has been updated since last save"""
+        f = open(self.filepath, "r")
+        saved_text = f.read()
+        f.close()
+
+        if saved_text == self.GetText():
+            return True
+        else:
+            return False
+
     def on_run(self):
         """Runs selected code in a new window."""
         # Create a test frame and hook into the caller.
