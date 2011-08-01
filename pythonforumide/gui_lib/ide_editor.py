@@ -228,16 +228,16 @@ class Editor(stc.StyledTextCtrl):
         run_editor.Layout()
         
         if self.filepath:
+            if self.GetModify():            
+                filename = os.path.split(self.filepath)[1]
+                run_panel.WriteText("Running %s" % filename)
+                run_panel.Newline()
 
-            filename = os.path.split(self.filepath)[1]
-            run_panel.WriteText("Running %s" % filename)
-            run_panel.Newline()
+                run_panel.WriteText("Running %s." % os.path.split(self.filepath)[-1])
 
-            run_panel.WriteText("Running %s." % os.path.split(self.filepath)[-1])
-
-            reactor.spawnProcess(PythonProcessProtocol(run_panel), 
-                                          get_python_exe(), 
-                                            ["python", str(self.filepath)])
+                reactor.spawnProcess(PythonProcessProtocol(run_panel), 
+                                              get_python_exe(), 
+                                                ["python", str(self.filepath)])
         else:
             run_panel.WriteText("Running unsaved script.")
             run_panel.Newline()
