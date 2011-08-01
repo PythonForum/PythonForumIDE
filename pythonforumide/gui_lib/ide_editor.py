@@ -11,7 +11,7 @@ from utils.textutils import split_comments
 import wx.stc as stc
 import wx
 
-from ide_test_frame import TestFrame
+from ide_test_frame import TestFrame, TestPanel
 
 #TODO: make customisable font and sizes. Perhaps maked this named tuple?
 faces = { 'times': 'Times',
@@ -201,8 +201,12 @@ class Editor(stc.StyledTextCtrl):
 
         # Create a test frame and hook into the caller.
         # Allows this frame to be destroyed by the main window on close.
-        self.editor_run = TestFrame(wx.GetApp().TopWindow, title="")
-        return self.editor_run
+        run_editor = TestFrame(wx.GetApp().TopWindow, title="")
+        run_panel = wx.TextCtrl(run_editor)
+        run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
+        run_editor.Layout()
+
+        return run_panel
 
 if __name__=='__main__':
     """Adds the editor to the frame"""
