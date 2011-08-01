@@ -1,8 +1,8 @@
-'''
+"""
 Created on 31 Jul 2011
 
 @author: D.W.
-'''
+"""
 
 import wx
 import ide_constant as ide
@@ -11,9 +11,7 @@ from ide_images import menu_icons
 
 class ToolBar(wx.ToolBar):
     def __init__(self, *args, **kwargs):
-        '''
-        Create the toolbar
-        '''
+        """Create the toolbar"""
         super(ToolBar, self).__init__( *args, **kwargs)
         self.SetToolBitmapSize((24,24))
         self._add_toolbar_btn(ide.ID_NEW, ide.id_text_new,

@@ -1,9 +1,9 @@
-'''
+"""
 Created on 31 Jul 2011
 
 @author: D.W., David
 @reviewer: david
-'''
+"""
 
 import wx
 import ide_constant as ide

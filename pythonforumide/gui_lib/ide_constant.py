@@ -1,8 +1,8 @@
-'''
+"""
 Created on 31 Jul 2011
 
 @author: D.W.
-'''
+"""
 
 import wx
 from collections import namedtuple as _nt
@@ -77,5 +77,3 @@ id_text_search= _id_text("Search\tCtrl+H", "Search",
 ID_RUNFILE=wx.NewId()
 id_text_runfile= _id_text("Run file\tF5", "Run",
                           "Run the active file", wx.ITEM_NORMAL)
-
-
