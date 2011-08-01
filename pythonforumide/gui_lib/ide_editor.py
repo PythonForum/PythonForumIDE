@@ -20,7 +20,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-from ide_test_frame import TestFrame, TestPanel
+from ide_simple_frame import SimpleFrame
 from ide_replace_frame import ReplaceFrame
 
 #TODO: make customisable font and sizes. Perhaps maked this named tuple?
@@ -203,8 +203,8 @@ class Editor(stc.StyledTextCtrl):
     
     def on_replace(self):
         """Displays a find/replace dialog"""
-        replace_frame_app = wx.PySimpleApp()
-        replace_frame = ReplaceFrame(parent=self, id=-1)
+        replace_frame_app = wx.PySimpleApp(False)
+        replace_frame = ReplaceFrame(self, id=wx.NewId())
         replace_frame.Show()
         replace_frame_app.MainLoop()
         replace_frame_app.Destroy()
@@ -216,7 +216,7 @@ class Editor(stc.StyledTextCtrl):
         # Allows this frame to be destroyed by the main window on close.
         reactor = wx.GetApp().this_reactor        
         
-        run_editor = TestFrame(wx.GetApp().TopWindow, title="")
+        run_editor = SimpleFrame(wx.GetApp().TopWindow, title="")
         run_panel = wx.richtext.RichTextCtrl(run_editor, style=wx.TE_READONLY)
         run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
         run_editor.Layout()
