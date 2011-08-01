@@ -217,9 +217,13 @@ class Editor(stc.StyledTextCtrl):
         run_editor.Layout()
         
         if self.filepath:
+<<<<<<< HEAD
             filename = os.path.split(self.filepath)[1]
             run_panel.WriteText("Running %s" % filename)
             run_panel.Newline()
+=======
+            run_panel.WriteText("Running %s." % os.path.split(self.filepath)[-1])
+>>>>>>> 90267c5d2c7fd1f49460e77abe831ed2f268bbc0
             reactor.spawnProcess(PythonProcessProtocol(run_panel), 
                                           get_python_exe(), 
                                             ["python", str(self.filepath)])

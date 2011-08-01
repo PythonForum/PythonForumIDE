@@ -54,7 +54,7 @@ class Notebook(aui.AuiNotebook):
                 if self._active_editor_page.save_file_as(path):
                     self.set_active_tab_text(filename)
                     self._active_editor_page.filepath = path
-            
+        
     def set_active_tab_text(self, text):
         """Rename the currently active tab text"""
         if self._active_tab_index> -1:
