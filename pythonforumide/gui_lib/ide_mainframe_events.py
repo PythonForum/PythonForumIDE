@@ -33,8 +33,10 @@ class MainFrameEvents(object):
         self.view.Bind(wx.EVT_MENU, self._on_editor_copy, id=ide.ID_COPY)
         self.view.Bind(wx.EVT_MENU, self._on_editor_paste, id=ide.ID_PASTE)
         self.view.Bind(wx.EVT_MENU, self._on_editor_delete, id=ide.ID_DELETE)
-        self.view.Bind(wx.EVT_MENU, self._on_editor_selectall, id=ide.ID_SELECTALL)
-        self.view.Bind(wx.EVT_MENU, self._on_editor_search_and_replace, id=ide.ID_SEARCH)
+        self.view.Bind(wx.EVT_MENU, self._on_editor_selectall, 
+                       id=ide.ID_SELECTALL)
+        self.view.Bind(wx.EVT_MENU, self._on_editor_search_and_replace, 
+                       id=ide.ID_SEARCH)
         self.view.Bind(wx.EVT_MENU, self._on_editor_run, id=ide.ID_RUNFILE)        
     
     def _on_new(self, event):
@@ -126,4 +128,3 @@ class MainFrameEvents(object):
             event.Enable(self.view.notebook.active_editor_can_run())
         else:
             event.Skip()
-        

@@ -30,7 +30,8 @@ class Notebook(aui.AuiNotebook):
         
     def open_editor_tab(self):
         """Loads a slected file into a new editor tab"""
-        dirname, filename= self.GetGrandParent().get_file('Open a file', wx.OPEN)
+        dirname, filename= self.GetGrandParent().get_file('Open a file', 
+                                                          wx.OPEN)
         if dirname and filename:
             editor= self.new_editor_tab(filename)
             path = os.path.join(dirname, filename)
@@ -45,7 +46,8 @@ class Notebook(aui.AuiNotebook):
             
     def save_as_active_editor_tab(self):
         """Save as for the currently active editor file"""
-        dirname, filename = self.GetGrandParent().get_file('Save file as', wx.SAVE)
+        dirname, filename = self.GetGrandParent().get_file('Save file as', 
+                                                           wx.SAVE)
         if dirname and filename:
             path = os.path.join(dirname, filename)
             if path:
@@ -193,15 +195,13 @@ class Notebook(aui.AuiNotebook):
             return True
         else:
             return False
-    
+
     def active_editor_can_run(self):
         """Returns True if the active editor can search"""
         if self._active_editor_page:
             return True
         else:
             return False
-        
-    
 
 if __name__=='__main__':
     import ide_test_app as wx_app
@@ -215,4 +215,3 @@ if __name__=='__main__':
     panel.sizer.Add(notebook, 1, wx.EXPAND)
     frame.Layout()
     app.MainLoop()
- 

@@ -53,7 +53,8 @@ class MainFrame(wx.Frame):
         '''
         creates a toolbar
         '''
-        tb= ide_toolbar.ToolBar(self, style= wx.TB_HORIZONTAL|wx.NO_BORDER|wx.TB_FLAT)
+        tb= ide_toolbar.ToolBar(self, style= wx.TB_HORIZONTAL|wx.NO_BORDER|
+                                wx.TB_FLAT)
         self.SetToolBar(tb)
          
     def _create_notebook_panel(self):
@@ -97,7 +98,7 @@ class MainFrame(wx.Frame):
             filename = dlg.GetFilename()
         else:
             # so maybe add error handling here.
-            raise RuntimeError("I guess something has gone wrong with the dialog")
+            raise RuntimeError("Something has gone wrong with the dialog")
         dlg.Destroy()
         return dirname, filename
 

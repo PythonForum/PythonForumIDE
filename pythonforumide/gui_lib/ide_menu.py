@@ -10,9 +10,7 @@ import ide_constant as ide
 from ide_images import menu_icons
 
 class MenuBar(wx.MenuBar):
-    '''
-    Creates a menubar
-    '''
+    """Creates a menubar"""
     def __init__(self, parent):
         super(MenuBar, self).__init__()
         self._parent = parent
@@ -21,12 +19,10 @@ class MenuBar(wx.MenuBar):
         self._add_search_menu()
         self._add_run_menu()
         
-#        self._parent.SetMenuBar(self)
+        #self._parent.SetMenuBar(self)
          
     def _add_file_menu(self):
-        '''
-        Adds the file menu
-        '''
+        """Adds the file menu"""
         fileMenu = wx.Menu()
         self._add_menu_item(fileMenu, ide.ID_NEW,
                             ide.id_text_new, menu_icons.get_icon_new())
@@ -55,9 +51,7 @@ class MenuBar(wx.MenuBar):
         self.Append(fileMenu, "&File")
         
     def _add_edit_menu(self):
-        '''
-        Adds the edit menu
-        '''
+        """Adds the edit menu"""
         editMenu = wx.Menu()
         
         self._add_menu_item(editMenu, ide.ID_UNDO,
@@ -87,9 +81,7 @@ class MenuBar(wx.MenuBar):
         self.Append(editMenu, "&Edit")
         
     def _add_search_menu(self):
-        '''
-        Adds the search menu
-        '''
+        """Adds the search menu"""
         searchMenu = wx.Menu()
         
         self._add_menu_item(searchMenu, ide.ID_SEARCH,
@@ -99,9 +91,7 @@ class MenuBar(wx.MenuBar):
         self.Append(searchMenu, "&Search")
         
     def _add_run_menu(self):
-        '''
-        Adds the run menu
-        '''
+        """Adds the run menu"""
         runMenu = wx.Menu()
         
         self._add_menu_item(runMenu, ide.ID_RUNFILE,
@@ -110,17 +100,9 @@ class MenuBar(wx.MenuBar):
         self.Append(runMenu, "&Run")
         
     def _add_menu_item(self, parent_menu, id, id_text, icon_bmp= None):
+        """Adds a menu item to the parent_menu"""
         item= wx.MenuItem(parent_menu, id, id_text.menu, id_text.status, 
                           id_text.menu_kind)
         if icon_bmp:
             item.SetBitmap(icon_bmp)
         parent_menu.AppendItem(item)
-        
-        
-        
-        
-        
-        
-        
-        
-        

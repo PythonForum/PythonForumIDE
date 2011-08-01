@@ -67,7 +67,8 @@ class Editor(stc.StyledTextCtrl):
         self.SetMarginWidth(2, 28)
      
     def SetStyles(self, lang='python'):
-        """This is different from the other Set methods thathttp://paste.pocoo.org/show/446107/ are called in the 
+        """This is different from the other Set methods that
+        http://paste.pocoo.org/show/446107/ are called in the 
         __init__ this one is for the highlighting and syntax of the langauge,
         this will eventually be callable with different langauge styles. 
         For the moment, leave the lang kwarg in. """
@@ -168,7 +169,7 @@ class Editor(stc.StyledTextCtrl):
         self.Clear()
 
     def on_select_all(self):
-        """Selects all the text, this function is not necessary but makes it cleaner"""
+        """Selects all the text"""
         self.SelectAll()
         
     def load_file(self, path):
