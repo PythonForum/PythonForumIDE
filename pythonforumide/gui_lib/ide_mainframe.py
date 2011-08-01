@@ -2,7 +2,7 @@
 """
 Created on Wed Jul 27 17:36:42 2011
 
-@author: jakob, David
+@author: jakob, David, confab
 """
 import os
 import wx
@@ -95,6 +95,12 @@ class MainFrame(wx.Frame):
     def on_run(self, event):
         """Supposedly handles the Run Event"""
         #Not working, this is being done somewhere else (confab made it)
+        
+        # Sorry bro, but if you actually read the history of the file
+        # you'd see that this comment is my [confab] first commit.
+        # Look at commit 63ebce0f6a9f331167e4 before you blame me for
+        # something else again.
+        
         from ide_outputframe import OutputFrame
         output_app = wx.PySimpleApp()
         output_frame = OutputFrame(parent = None, title="")        
