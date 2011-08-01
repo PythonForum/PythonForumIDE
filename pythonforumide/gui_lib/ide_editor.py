@@ -10,6 +10,7 @@ sys.path.append('..')
 from utils.textutils import split_comments
 from utils.interpreter import PythonProcessProtocol
 from utils.version import get_python_exe
+import wx.richtext
 import wx.stc as stc
 import os.path
 import wx
@@ -211,17 +212,20 @@ class Editor(stc.StyledTextCtrl):
         reactor = wx.GetApp().this_reactor        
         
         run_editor = TestFrame(wx.GetApp().TopWindow, title="")
-        run_panel = wx.TextCtrl(run_editor)
+        run_panel = wx.richtext.RichTextCtrl(run_editor)
         run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
         run_editor.Layout()
         
         if self.filepath:
-            run_panel.WriteText("Running %s." % os.path.split(self.filepath)[-1]
+            filename = os.path.split(self.filepath)[1]
+            run_panel.WriteText("Running %s" % filename)
+            run_panel.Newline()
             reactor.spawnProcess(PythonProcessProtocol(run_panel), 
                                           get_python_exe(), 
                                             ["python", str(self.filepath)])
         else:
             run_panel.WriteText("Running unsaved script.")
+            run_panel.Newline()
             script = StringIO()
             script.write(self.GetText())
             script.seek(0)

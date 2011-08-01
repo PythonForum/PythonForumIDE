@@ -15,10 +15,23 @@ class PythonProcessProtocol(ProcessProtocol):
         
     def connectionMade(self):
         print "subprocess open.!"
-        
+
+    def connectionLost(self, reason):
+        self.frame.Newline()
+        self.frame.WriteText("\n\nExited with code 0")
+    
     def outReceived(self, data):
         self.frame.WriteText(data)
         print "Got stdout."
     
     def errRecieved(self, data):
         print "Got stderr!"
+        self.frame.Newline()
+        self.frame.BeginTextColour("Red")
+        self.frame.WriteText(data)                
+        
+    def errConnectionLost(self):
+        print "errConnectionLost! The child closed their stderr."
+
+    def processEnded(self, reason):
+        print "processEnded, status %d" % (reason.value.exitCode,)
