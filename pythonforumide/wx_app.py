@@ -1,16 +1,15 @@
 """
 Created on 31 Jul 2011
 
-@author: D.W., david
+@author: D.W., david, confab
 @reviewer: david
 """
 
 import wx
 import gui_lib.ide_mainframe as ide_mainframe
 import gui_lib.ide_mainframe_events as ide_mainframe_events
-from config.config import Ide_config
+from config.config import IdeConfig
 
-#import config.config.Ide_config as Ide_config
 from twisted.internet import wxreactor
 wxreactor.install()
 
@@ -31,7 +30,7 @@ class Wx_App(wx.App):
         
     def _create_config(self):
         """Set up config"""
-        self.config = Ide_config()
+        self.config = IdeConfig()
         
     def _create_port(self):
         """Creates a free port"""
