@@ -34,7 +34,7 @@ class MainFrameEvents(object):
         self.view.Bind(wx.EVT_MENU, self._on_editor_delete, id=ide.ID_DELETE)
         self.view.Bind(wx.EVT_MENU, self._on_editor_selectall, id=ide.ID_SELECTALL)
         self.view.Bind(wx.EVT_MENU, self._on_editor_search_and_replace, id=ide.ID_SEARCH)
-        self.view.Bind(wx.EVT_MENU, MainFrame.on_run, id=ide.ID_RUNFILE)        
+        self.view.Bind(wx.EVT_MENU, self._on_editor_run, id=ide.ID_RUNFILE)        
     
     def _on_new(self, event):
         """Opens a new tab with a new editor instance"""
@@ -91,6 +91,10 @@ class MainFrameEvents(object):
     def _on_exit(self, event):
         """ application wants to exit"""
         self.view.on_exit()
+    
+    def _on_editor_run(self, event):
+        """Runs selected code in a new window."""
+        self.view.notebook.run_active_editor()
          
     def _evt_update_ui(self, event):
         '''

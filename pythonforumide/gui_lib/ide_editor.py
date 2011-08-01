@@ -11,6 +11,8 @@ from utils.textutils import split_comments
 import wx.stc as stc
 import wx
 
+from ide_test_frame import TestFrame
+
 #TODO: make customisable font and sizes. Perhaps maked this named tuple?
 faces = { 'times': 'Times',
               'mono' : 'Courier',
@@ -123,7 +125,7 @@ class Editor(stc.StyledTextCtrl):
             indent_level = max([indent_level - 1, 0])
 
         if usetab:
-            indent = "/t" * indent_level
+            indent = "\t" * indent_level
         else:
             indent = indent_amount * " " * indent_level
 
@@ -186,6 +188,15 @@ class Editor(stc.StyledTextCtrl):
     def on_replace(self):
         """Displays a find/replace dialog"""
         #I think we should create a new frame for this, to be coded yet
+        pass
+
+    def on_run(self):
+        """Runs selected code in a new window."""
+
+        # Create a test frame and hook into the caller.
+        # Allows this frame to be destroyed by the main window on close.
+        self.editor_run = TestFrame(wx.GetApp().TopWindow, title="")
+        return self.editor_run
 
 if __name__=='__main__':
     import ide_test_app as wx_app

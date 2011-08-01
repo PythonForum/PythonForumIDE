@@ -109,6 +109,10 @@ class Notebook(aui.AuiNotebook):
         """Replace changes in active editor"""
         self._active_editor_page.on_replace()
           
+    def run_active_editor(self):
+        """Runs selected code in a new window."""
+        self._active_editor_page.on_run()
+
     def active_editor_can_cut(self):
         """Returns True if the active editor can cut"""
         try:
