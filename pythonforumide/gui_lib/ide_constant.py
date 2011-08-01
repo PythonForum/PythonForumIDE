@@ -66,6 +66,12 @@ ID_SELECTALL= wx.NewId()
 id_text_selectall= _id_text("Select All\tCtrl+A",
                             "Select all", "Select all", wx.ITEM_NORMAL)
 #===============================================================================
+#  View ID
+#===============================================================================
+ID_SHOW_TOOLBAR = wx.NewId()
+id_show_toolbar = _id_text("Show Toolbar", "Show Toolbar", "Show Toolbar",
+                           wx.ITEM_CHECK)
+#===============================================================================
 #  Search ID
 #===============================================================================
 ID_SEARCH= wx.NewId()

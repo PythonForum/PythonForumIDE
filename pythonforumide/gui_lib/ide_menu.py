@@ -12,13 +12,14 @@ from ide_images import menu_icons
 class MenuBar(wx.MenuBar):
     """Creates a menubar"""
     def __init__(self, parent):
+        """Initiates the menu bar and menubar-related functions"""
         super(MenuBar, self).__init__()
         self._parent = parent
         self._add_file_menu()
         self._add_edit_menu()
+        self._add_view_menu()
         self._add_search_menu()
         self._add_run_menu()
-        
         #self._parent.SetMenuBar(self)
          
     def _add_file_menu(self):
@@ -79,6 +80,15 @@ class MenuBar(wx.MenuBar):
         self._add_menu_item(editMenu, ide.ID_SELECTALL, ide.id_text_selectall)
         
         self.Append(editMenu, "&Edit")
+    
+    def _add_view_menu(self):
+        """Adds the view menu"""
+        view_menu = wx.Menu()
+        
+        self._add_menu_item(view_menu, ide.ID_SHOW_TOOLBAR,
+                           ide.id_show_toolbar)
+        
+        self.Append(view_menu, "&View")
         
     def _add_search_menu(self):
         """Adds the search menu"""

@@ -67,7 +67,6 @@ class Wx_App(wx.App):
         
 class ListenProtocol(Protocol):
     """Handles connections"""
-    #The name of the following functions is not ok according to PEP-8
     def connectionMade(self):
         print "Got connection!!!!"
         
