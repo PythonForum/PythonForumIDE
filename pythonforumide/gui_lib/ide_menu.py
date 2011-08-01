@@ -1,7 +1,8 @@
 '''
 Created on 31 Jul 2011
 
-@author: D.W.
+@author: D.W., David
+@reviewer: david
 '''
 
 import wx
@@ -48,7 +49,8 @@ class MenuBar(wx.MenuBar):
         self._add_menu_item(fileMenu, ide.ID_CLOSETAB,
                             ide.id_text_closetab, menu_icons.get_icon_close())
 
-        self._add_menu_item(fileMenu, ide.ID_EXITAPP, ide.id_text_exitapp, menu_icons.get_icon_quit())
+        self._add_menu_item(fileMenu, ide.ID_EXITAPP, ide.id_text_exitapp, 
+                            menu_icons.get_icon_quit())
 
         self.Append(fileMenu, "&File")
         
@@ -91,7 +93,8 @@ class MenuBar(wx.MenuBar):
         searchMenu = wx.Menu()
         
         self._add_menu_item(searchMenu, ide.ID_SEARCH,
-                            ide.id_text_search, menu_icons.get_find_and_replace())
+                            ide.id_text_search, 
+                            menu_icons.get_find_and_replace())
         
         self.Append(searchMenu, "&Search")
         
@@ -107,7 +110,8 @@ class MenuBar(wx.MenuBar):
         self.Append(runMenu, "&Run")
         
     def _add_menu_item(self, parent_menu, id, id_text, icon_bmp= None):
-        item= wx.MenuItem(parent_menu, id, id_text.menu, id_text.status, id_text.menu_kind)
+        item= wx.MenuItem(parent_menu, id, id_text.menu, id_text.status, 
+                          id_text.menu_kind)
         if icon_bmp:
             item.SetBitmap(icon_bmp)
         parent_menu.AppendItem(item)
