@@ -1,11 +1,11 @@
 """
 Created on 31 Jul 2011
 
-@author: Main
+@author: Main, confab
 """
 
 import wx
-from pythonforumide.config.config import Ide_config
+from pythonforumide.config.config import IdeConfig
 
 class Wx_App(wx.App):
     def __init__(self, *args, **kwargs):
@@ -15,7 +15,7 @@ class Wx_App(wx.App):
         
     def _create_config(self):
         """Set up config"""
-        self.config= Ide_config()
+        self.config= IdeConfig()
   
     def OnExit(self):
         """Handles the frame closing function"""

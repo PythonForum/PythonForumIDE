@@ -18,3 +18,8 @@ To get your file reviewed;
 
 Files to be reviewed;
 -
+Ide_Config.cfg
+config/Ide_Config.cfg
+config/config.py
+gui_lib/ide_test_app.py
+wx_app.py
