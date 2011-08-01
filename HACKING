@@ -1,4 +1,4 @@
-If you want to hack PythonForumIDE you need the following software:
+If you want to hack on PythonForumIDE you need the following software:
   - Python 2.7.1
   - wxPython 2.8
   - Twisted 10.2.0-1
