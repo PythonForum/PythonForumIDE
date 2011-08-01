@@ -84,11 +84,10 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             dirname = dlg.GetDirectory()
             filename = dlg.GetFilename()
+            dlg.Destroy()
+            return dirname, filename
         else:
-            # so maybe add error handling here.
-            raise RuntimeError("Something has gone wrong with the dialog")
-        dlg.Destroy()
-        return dirname, filename
+            return "", "" #Cancels the action
 
 if __name__=='__main__':
     import ide_test_app as wx_app
