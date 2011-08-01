@@ -10,15 +10,15 @@ import ide_constant as ide
 from ide_mainframe import MainFrame
 
 class MainFrameEvents(object):
+    """Handles the MainFrame eventss"""
     def __init__(self, view, model= None):
+        """Sets the binds and does other stuff"""
         self.view = view
         self.model = model
         self._create_binds()
       
     def _create_binds(self):
-        '''
-        Create binds
-        '''
+        """Create binds"""
         self.view.Bind(wx.EVT_UPDATE_UI, self._evt_update_ui)
         self.view.Bind(wx.EVT_MENU, self._on_new, id=ide.ID_NEW)
         self.view.Bind(wx.EVT_MENU, self._on_open, id=ide.ID_OPEN)  
@@ -100,9 +100,7 @@ class MainFrameEvents(object):
         self.view.notebook.run_active_editor()
          
     def _evt_update_ui(self, event):
-        '''
-        Events to update the view
-        '''
+        """Events to update the view"""
         event_id = event.GetId()
         if event_id== ide.ID_CUT:
             event.Enable(self.view.notebook.active_editor_can_cut())
