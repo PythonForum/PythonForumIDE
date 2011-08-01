@@ -28,8 +28,8 @@ class SimplePanel(wx.Panel):
 if __name__ == '__main__':
     """Adds the test panel to the test frame"""
     app = wx.PySimpleApp(False)
-    frame= SimpleFrame(None, title= "Testing TestFrame")
-    panel= SimplePanel(frame)
+    frame = SimpleFrame(None, title= "Testing SimpleFrame")
+    panel = SimplePanel(frame)
     frame.sizer.Add(panel, 1, wx.EXPAND)
     frame.Layout()
     app.MainLoop()
