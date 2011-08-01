@@ -1,6 +1,6 @@
 """
 @author: Jakob, David, bunburya, confab
-@reviewer: Somelauw, ghoulmaster
+@reviewer: Somelauw, ghoulmaster, David
 """
 
 #YES DIRT HACK GET OVER IT. Dont remove it might go before it goes into master
@@ -23,7 +23,9 @@ faces = { 'times': 'Times',
              }
 
 class Editor(stc.StyledTextCtrl):
+    """Inherits wxStyledTextCtrl and handles all editor functions"""
     def __init__(self, parent):
+        """Starts the editor and calls some editor-related functions"""
         super(Editor, self).__init__(parent)
 
         self.conf= wx.GetApp().config
@@ -37,6 +39,7 @@ class Editor(stc.StyledTextCtrl):
         self.SetBindings()
 
     def SetBindings(self):
+        """Sets the key events bindings"""
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
     
     def SetGenerics(self):
@@ -109,7 +112,8 @@ class Editor(stc.StyledTextCtrl):
         # End of line where string is not closed
         self.StyleSetSpec(stc.STC_P_STRINGEOL, "face:%(mono)s,fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % faces)
             
-    def SmartIndent(self):     
+    def SmartIndent(self):
+        """Handles smart indentation for the editor"""
         # Read settings from the config file
         indent_amount = int(self.conf["indent"])
         usetab = int(self.conf["usetab"])
@@ -134,6 +138,7 @@ class Editor(stc.StyledTextCtrl):
         print self.conf
         
     def OnKeyDown(self, event):
+        """Defines events for when the user presses a key"""
         key = event.GetKeyCode()
         control = event.ControlDown()
         alt = event.AltDown()
@@ -200,6 +205,7 @@ class Editor(stc.StyledTextCtrl):
         return self.editor_run
 
 if __name__=='__main__':
+    """Adds the editor to the frame"""
     import ide_test_app as wx_app
     import ide_test_frame 
     app = wx_app.Wx_App(False)

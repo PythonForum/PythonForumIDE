@@ -12,7 +12,6 @@ import gui_lib.ide_constant as ide
 from ide_notebook import Notebook
 from ide_notebook_events import NotebookEvents
 
-
 class MainFrame(wx.Frame):
     """Class with the GUI and GUI functions"""
 
@@ -33,34 +32,27 @@ class MainFrame(wx.Frame):
         self.panel_sizer= wx.BoxSizer(wx.VERTICAL)
         self.frame_panel.SetSizer(self.panel_sizer)
         
-    
         self._create_notebook_panel()
         
         self._create_menu()
         self._create_toolbar()
-#        self._create_notebook_panel()
+        #self._create_notebook_panel()
         self._start_up()
         self.Layout()
         self.Show()
            
     def _create_menu(self):
-        '''
-        creates a menu
-        '''
+        """Creates a menu"""
         self.SetMenuBar(ide_menu.MenuBar(self))
         
     def _create_toolbar(self):
-        '''
-        creates a toolbar
-        '''
+        """Creates a toolbar"""
         tb= ide_toolbar.ToolBar(self, style= wx.TB_HORIZONTAL|wx.NO_BORDER|
                                 wx.TB_FLAT)
         self.SetToolBar(tb)
          
     def _create_notebook_panel(self):
-        '''
-        Create the notebook panel
-        '''
+        '''Create the notebook panel'''
         self.notebook = Notebook(self.frame_panel)
         NotebookEvents(self.notebook)
         self.panel_sizer.Add(self.notebook, 1, wx.EXPAND|wx.ALL, 0)
@@ -73,9 +65,7 @@ class MainFrame(wx.Frame):
         self.notebook.new_editor_tab()
         
     def on_exit(self):
-        '''
-        What to do when the application wants to exit
-        '''
+        '''Handles the event triggered by the user to exit'''
         dial = wx.MessageDialog(self,'Do you really want to exit?',
                         'Exit Python IDE',
                         wx.YES_NO | wx.ICON_QUESTION)
@@ -102,7 +92,9 @@ class MainFrame(wx.Frame):
         dlg.Destroy()
         return dirname, filename
 
-    def on_run(self, event):   
+    def on_run(self, event):
+        """Supposedly handles the Run Event"""
+        #Not working, this is being done somewhere else (confab made it)
         from ide_outputframe import OutputFrame
         output_app = wx.PySimpleApp()
         output_frame = OutputFrame(parent = None, title="")        
