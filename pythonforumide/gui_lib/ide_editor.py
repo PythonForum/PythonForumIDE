@@ -21,6 +21,7 @@ except ImportError:
     from StringIO import StringIO
 
 from ide_test_frame import TestFrame, TestPanel
+from ide_replace_frame import ReplaceFrame
 
 #TODO: make customisable font and sizes. Perhaps maked this named tuple?
 faces = { 'times': 'Times',
@@ -202,19 +203,11 @@ class Editor(stc.StyledTextCtrl):
     
     def on_replace(self):
         """Displays a find/replace dialog"""
-        #I think we should create a new frame for this, to be coded yet
+        replace_frame_app = wx.PySimpleApp()
+        replace_frame = ReplaceFrame(parent=self, id=-1)
+        replace_frame.Show()
+        replace_frame_app.MainLoop()
         pass
-
-    def is_saved(self):
-        """Checks if the current file has been updated since last save"""
-        f = open(self.filepath, "r")
-        saved_text = f.read()
-        f.close()
-
-        if saved_text == self.GetText():
-            return True
-        else:
-            return False
 
     def on_run(self):
         """Runs selected code in a new window."""
