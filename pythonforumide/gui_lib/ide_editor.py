@@ -207,7 +207,8 @@ class Editor(stc.StyledTextCtrl):
         replace_frame = ReplaceFrame(parent=self, id=-1)
         replace_frame.Show()
         replace_frame_app.MainLoop()
-        pass
+        replace_frame_app.Destroy()
+
 
     def on_run(self):
         """Runs selected code in a new window."""
@@ -221,16 +222,15 @@ class Editor(stc.StyledTextCtrl):
         run_editor.Layout()
         
         if self.filepath:
-            if self.GetModify():            
-                filename = os.path.split(self.filepath)[1]
-                run_panel.WriteText("Running %s" % filename)
-                run_panel.Newline()
-
-                run_panel.WriteText("Running %s." % os.path.split(self.filepath)[-1])
-
-                reactor.spawnProcess(PythonProcessProtocol(run_panel), 
-                                              get_python_exe(), 
-                                                ["python", str(self.filepath)])
+            if self.GetModify():      
+                self.SaveFile(self.filepath)
+            filename = os.path.split(self.filepath)[1]
+            run_panel.WriteText("Running %s" % filename)
+            run_panel.Newline()
+            reactor.spawnProcess(PythonProcessProtocol(run_panel), 
+                                          get_python_exe(), 
+                                          ["python", str(self.filepath)])
+        
         else:
             run_panel.WriteText("Running unsaved script.")
             run_panel.Newline()

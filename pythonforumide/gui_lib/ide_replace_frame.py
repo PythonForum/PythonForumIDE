@@ -4,7 +4,7 @@ class ReplaceFrame(wx.Frame):
     """Class with the GUI and the GUI functions"""
     def __init__(self, parent, id):
         """"Displays the frame, creates the GUI"""
-        wx.Frame.__init__(self, parent, id, "Find and Replace", size=(410, 120))
+        wx.Frame.__init__(self, parent, id, "Find and Replace", size=(410, 150))
         self.create_gui()
         self.to_replace.SetFocus()
         self.parent = parent
