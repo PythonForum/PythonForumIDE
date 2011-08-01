@@ -37,7 +37,7 @@ class MainFrameEvents(object):
                        id=ide.ID_SELECTALL)
         self.view.Bind(wx.EVT_MENU, self._on_editor_search_and_replace, 
                        id=ide.ID_SEARCH)
-        self.view.Bind(wx.EVT_MENU, self._on_editor_run, id=ide.ID_RUNFILE)        
+        self.view.Bind(wx.EVT_MENU, self._on_editor_run, id=ide.ID_RUNFILE)
     
     def _on_new(self, event):
         """Opens a new tab with a new editor instance"""

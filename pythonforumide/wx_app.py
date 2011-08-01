@@ -74,6 +74,7 @@ class ListenProtocol(Protocol):
         print "Connection closed."
 
 class ListenFactory(Factory):
+    """Handles Twisted listen protocols"""
     protocol = ListenProtocol
     
 if __name__ == '__main__':
