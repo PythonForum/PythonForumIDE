@@ -272,10 +272,10 @@ class HeaderPanel(wx.Panel):
 
 if __name__=='__main__':
     import ide_test_app as wx_app
-    import ide_test_frame
+    from ide_simple_frame import SimpleFrame, SimplePanel
     app = wx_app.Wx_App(False)
-    frame= ide_test_frame.TestFrame(None, title= "Testing TextPanel without events")
-    panel= ide_test_frame.TestPanel(frame)
+    frame= SimpleFrame(None, title= "Testing TextPanel without events")
+    panel= SimplePanel(frame)
     frame.sizer.Add(panel, 1, wx.EXPAND)
     panel_black= wx.Panel(panel)
     panel_black.SetBackgroundColour((0, 0,0 ))
