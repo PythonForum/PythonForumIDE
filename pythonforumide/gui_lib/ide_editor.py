@@ -155,15 +155,10 @@ class Editor(stc.StyledTextCtrl):
         print self.conf
     
     def AutoComp(self, event):
-        """This is very buggy. Todo:
-        - Code completion only works the first time you type a character.
-        - When code completion does work, it doesn't print the first character
-          of the selected word.
-        - It seems that backspacing to the start after using code completion
-          results in a Segmentation Fault.
-        - The backend class seems to be working as expected. It's AutoCompShow
-          that appears to be causing the problems.
-        """
+        """TODO:
+        - If you indent (via tab or SmartIndent) and then autocomplete,
+          it seems that the program automatically indents again after
+          printing the word."""
         
         try:
             ch = chr(event.GetUniChar()).lower()
@@ -172,17 +167,10 @@ class Editor(stc.StyledTextCtrl):
             self.autocomp.key = []
             return
         self.autocomp.update_key(ch)
-        print 'key:', self.autocomp.key
         choices = list(self.autocomp.suggest())
         if choices:
             choices.sort()
-            args = self.autocomp.len_entered, ' '.join(choices)
-            print args
-            self.AutoCompShow(*args) # this doesn't seem to do anything
-                                     # most of the time.
-        else:
-            print 'no choices to show'
-        
+            self.AutoCompShow(self.autocomp.len_entered-1, ' '.join(choices))        
         
     def OnKeyDown(self, event):
         """Defines events for when the user presses a key"""
