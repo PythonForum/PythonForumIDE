@@ -203,12 +203,14 @@ class Editor(stc.StyledTextCtrl):
     
     def on_replace(self):
         """Displays a find/replace dialog"""
-        replace_frame_app = wx.PySimpleApp(False)
-        replace_frame = ReplaceFrame(self, id=wx.NewId())
-        replace_frame.Show()
-        replace_frame_app.MainLoop()
-        replace_frame_app.Destroy()
-
+        
+        # Create a search frame and hook into the caller.
+        # Allows this frame to be destroyed by the main window on close.
+        replace_frame = ReplaceFrame(active_editor=self,
+                                     parent=wx.GetApp().TopWindow,
+                                     title="Find and Replace", size=(410, 150))
+        replace_frame.Layout()
+        
 
     def on_run(self):
         """Runs selected code in a new window."""
