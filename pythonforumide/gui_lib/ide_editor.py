@@ -10,6 +10,7 @@ sys.path.append('..')
 from utils.textutils import split_comments
 from utils.interpreter import PythonProcessProtocol
 from utils.version import get_python_exe
+from utils.autocomplete import CodeCompletion
 import wx.richtext
 import wx.stc as stc
 import os.path
@@ -47,6 +48,12 @@ class Editor(stc.StyledTextCtrl):
         self.SetMargins()        
         self.SetStyles()
         self.SetBindings()
+        self.SetAutoComplete()
+    
+    def SetAutoComplete(self):
+        self.autocomp = CodeCompletion(__builtins__)
+        import math; self.autocomp.add_module(math) #testing
+        print(self.autocomp.suggest()) # testing
 
     def SetBindings(self):
         """Sets the key events bindings"""
@@ -146,6 +153,24 @@ class Editor(stc.StyledTextCtrl):
 
         self.AddText(indent)
         print self.conf
+    
+    def AutoComp(self, event):
+        """TODO:
+        - If you indent (via tab or SmartIndent) and then autocomplete,
+          it seems that the program automatically indents again after
+          printing the word."""
+        
+        try:
+            ch = chr(event.GetUniChar()).lower()
+        except ValueError:
+            self.autocomp.clear_cache()
+            self.autocomp.key = []
+            return
+        self.autocomp.update_key(ch)
+        choices = list(self.autocomp.suggest())
+        if choices:
+            choices.sort()
+            self.AutoCompShow(self.autocomp.len_entered-1, ' '.join(choices))        
         
     def OnKeyDown(self, event):
         """Defines events for when the user presses a key"""
@@ -156,6 +181,7 @@ class Editor(stc.StyledTextCtrl):
             self.SmartIndent()
         else:
             event.Skip()
+        self.AutoComp(event)
 
     def on_undo(self):
         """Checks if can Undo and if yes undoes"""
