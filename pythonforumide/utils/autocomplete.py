@@ -10,11 +10,14 @@ class CodeCompletion(object):
     different UI toolkits.
     """
     
+    valid_ch = 'abcdefghijklmnopqrstuvwxyz0123456789_'
+    
     def __init__(self, *modules):
         self._suggestions = set()
         self._cache = set()
+        self._key = []
         for mod in modules:
-            self.add_module(m)
+            self.add_module(mod)
     
     def add_module(self, module):
         """Adds the variable and method names from a module to the pool
@@ -28,15 +31,26 @@ class CodeCompletion(object):
         """
         self._suggestions.update(suggest)
     
-    def suggest(self, key):
+    def suggest(self, key=None):
         """Return a set of possible completions based on the keyword
         provided. Stores the result in a cache so that future calls
         don't unnecessarily repeat searches.
         """
+        if key is None:
+            key = ''.join(self._key)
+        if not key:
+            return set()
         pool = self._cache or self._suggestions
         suggs = {s for s in pool if s.startswith(key)}
         self._cache = set(suggs)
         return suggs
+        
+    def update_key(self, char):
+        if not char in self.valid_ch:
+            self._key = []
+            self.clear_cache()
+        else:
+            self._key.append(char)
     
     def cache(self, c):
         self._cache = c
@@ -48,3 +62,15 @@ class CodeCompletion(object):
     def choices(self):
         """Return a set of all possible suggestions."""
         return self._suggestions()
+    
+    @property
+    def key(self):
+        return ''.join(self._key)
+    
+    @key.setter
+    def key(self, new):
+        self._key = list(new)
+    
+    @property
+    def len_entered(self):
+        return len(self._key)

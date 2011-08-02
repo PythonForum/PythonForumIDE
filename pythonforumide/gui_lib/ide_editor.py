@@ -10,6 +10,7 @@ sys.path.append('..')
 from utils.textutils import split_comments
 from utils.interpreter import PythonProcessProtocol
 from utils.version import get_python_exe
+from utils.autocomplete import CodeCompletion
 import wx.richtext
 import wx.stc as stc
 import os.path
@@ -47,6 +48,12 @@ class Editor(stc.StyledTextCtrl):
         self.SetMargins()        
         self.SetStyles()
         self.SetBindings()
+        self.SetAutoComplete()
+    
+    def SetAutoComplete(self):
+        self.autocomp = CodeCompletion(__builtins__)
+        import math; self.autocomp.add_module(math) #testing
+        print(self.autocomp.suggest()) # testing
 
     def SetBindings(self):
         """Sets the key events bindings"""
@@ -146,6 +153,36 @@ class Editor(stc.StyledTextCtrl):
 
         self.AddText(indent)
         print self.conf
+    
+    def AutoComp(self, event):
+        """This is very buggy. Todo:
+        - Code completion only works the first time you type a character.
+        - When code completion does work, it doesn't print the first character
+          of the selected word.
+        - It seems that backspacing to the start after using code completion
+          results in a Segmentation Fault.
+        - The backend class seems to be working as expected. It's AutoCompShow
+          that appears to be causing the problems.
+        """
+        
+        try:
+            ch = chr(event.GetUniChar()).lower()
+        except ValueError:
+            self.autocomp.clear_cache()
+            self.autocomp.key = []
+            return
+        self.autocomp.update_key(ch)
+        print 'key:', self.autocomp.key
+        choices = list(self.autocomp.suggest())
+        if choices:
+            choices.sort()
+            args = self.autocomp.len_entered, ' '.join(choices)
+            print args
+            self.AutoCompShow(*args) # this doesn't seem to do anything
+                                     # most of the time.
+        else:
+            print 'no choices to show'
+        
         
     def OnKeyDown(self, event):
         """Defines events for when the user presses a key"""
@@ -156,6 +193,7 @@ class Editor(stc.StyledTextCtrl):
             self.SmartIndent()
         else:
             event.Skip()
+        self.AutoComp(event)
 
     def on_undo(self):
         """Checks if can Undo and if yes undoes"""
