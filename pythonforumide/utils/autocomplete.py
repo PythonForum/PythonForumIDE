@@ -1,3 +1,8 @@
+"""
+@author: bunburya
+"""
+
+
 class CodeCompletion:
     """A backend class for code completion.
     This does more than it needs to for auto-complete in wx (which does
@@ -41,4 +46,5 @@ class CodeCompletion:
     
     @property
     def choices(self):
+        """Return a set of all possible suggestions."""
         return self._suggestions()
