@@ -35,8 +35,9 @@ class MainFrameEvents(object):
         self.view.Bind(wx.EVT_MENU, self._on_editor_delete, id=ide.ID_DELETE)
         self.view.Bind(wx.EVT_MENU, self._on_editor_selectall, 
                        id=ide.ID_SELECTALL)
+        self.view.Bind(wx.EVT_MENU, self._on_editor_find,id=ide.ID_FIND)
         self.view.Bind(wx.EVT_MENU, self._on_editor_search_and_replace, 
-                       id=ide.ID_SEARCH)
+                       id=ide.ID_SEARCH_REPLACE)
         self.view.Bind(wx.EVT_MENU, self._on_editor_run, id=ide.ID_RUNFILE)
     
     def _on_new(self, event):
@@ -86,7 +87,10 @@ class MainFrameEvents(object):
     def _on_editor_selectall(self, event):
         """Selectall for the current editor tab"""
         self.view.notebook.selectall_active_editor()
-        
+    
+    def _on_editor_find(self, event):
+        self.view.notebook.find_active_editor()
+    
     def _on_editor_search_and_replace(self, event):
         """Replace for the current editor tab"""
         self.view.notebook.replace_active_editor()
@@ -120,7 +124,9 @@ class MainFrameEvents(object):
             event.Enable(self.view.notebook.active_editor_can_saveas())
         elif event_id== ide.ID_CLOSETAB:
             event.Enable(self.view.notebook.active_editor_can_close_tab())
-        elif event_id== ide.ID_SEARCH:
+        elif event_id== ide.ID_FIND:
+            event.Enable(self.view.notebook.active_editor_can_search())
+        elif event_id== ide.ID_SEARCH_REPLACE:
             event.Enable(self.view.notebook.active_editor_can_search())
         elif event_id== ide.ID_RUNFILE:
             event.Enable(self.view.notebook.active_editor_can_run())

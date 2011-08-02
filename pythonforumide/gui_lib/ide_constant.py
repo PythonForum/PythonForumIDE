@@ -1,7 +1,7 @@
 """
 Created on 31 Jul 2011
 
-@author: D.W.
+@author: D.W., David
 """
 
 import wx
@@ -74,9 +74,13 @@ id_show_toolbar = _id_text("Show Toolbar", "Show Toolbar", "Show Toolbar",
 #===============================================================================
 #  Search ID
 #===============================================================================
-ID_SEARCH= wx.NewId()
-id_text_search= _id_text("Search\tCtrl+H", "Search",
-                         "Search/replace the active file", wx.ITEM_NORMAL)
+ID_FIND = wx.NewId()
+id_find_text = _id_text("Find\tCtrl+F", "Find", "Find in the current file",
+                        wx.ITEM_NORMAL)
+
+ID_SEARCH_REPLACE = wx.NewId()
+id_text_search = _id_text("Search\tCtrl+H", "Search",
+                          "Search/replace the active file", wx.ITEM_NORMAL)
 #===============================================================================
 #  Run ID
 #===============================================================================

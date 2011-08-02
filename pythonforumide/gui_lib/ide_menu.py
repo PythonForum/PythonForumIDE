@@ -94,7 +94,10 @@ class MenuBar(wx.MenuBar):
         """Adds the search menu"""
         searchMenu = wx.Menu()
         
-        self._add_menu_item(searchMenu, ide.ID_SEARCH,
+        self._add_menu_item(searchMenu, ide.ID_FIND,
+                            ide.id_find_text )
+        
+        self._add_menu_item(searchMenu, ide.ID_SEARCH_REPLACE,
                             ide.id_text_search, 
                             menu_icons.get_find_and_replace())
         

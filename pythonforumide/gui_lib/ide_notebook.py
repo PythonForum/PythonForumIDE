@@ -107,7 +107,11 @@ class Notebook(aui.AuiNotebook):
     def selectall_active_editor(self):
         """Sslectall changes in active editor"""
         self._active_editor_page.on_select_all()
-        
+    
+    def find_active_editor(self):
+        """Finds text in the current editor"""
+        self._active_editor_page.on_find()
+    
     def replace_active_editor(self):
         """Replace changes in active editor"""
         self._active_editor_page.on_replace()

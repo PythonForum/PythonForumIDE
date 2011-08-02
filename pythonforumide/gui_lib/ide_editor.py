@@ -201,6 +201,15 @@ class Editor(stc.StyledTextCtrl):
         self.filepath= filepath
         return self.save_file()
     
+    def on_find(self):
+        """Finds text in the text"""
+        #Currently searchs all text, needs to have more options
+        TextInput=wx.TextEntryDialog(None, "Enter text:", 'Find text', '')
+        if TextInput.ShowModal()== wx.ID_OK:
+            find_position = self.FindText(0, len(self.GetText()), 
+                                          TextInput.GetValue(), 0)
+            self.SetCurrentPos(find_position)
+
     def on_replace(self):
         """Displays a find/replace dialog"""
         
