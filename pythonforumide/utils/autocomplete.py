@@ -41,7 +41,7 @@ class CodeCompletion(object):
         if not key:
             return set()
         pool = self._cache or self._suggestions
-        suggs = {s for s in pool if s.startswith(key)}
+        suggs = set(s for s in pool if s.startswith(key))
         self._cache = set(suggs)
         return suggs
         
