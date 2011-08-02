@@ -52,7 +52,7 @@ class Editor(stc.StyledTextCtrl):
     
     def SetAutoComplete(self):
         self.autocomp = CodeCompletion()
-        self.autocomp.add_suggestion(*__builtins__.viewkeys())
+        self.autocomp.add_suggestion(*__builtins__.keys())
 
     def SetBindings(self):
         """Sets the key events bindings"""
