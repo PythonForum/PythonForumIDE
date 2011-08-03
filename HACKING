@@ -1,7 +1,8 @@
 If you want to hack on PythonForumIDE you need the following software:
-  - Python 2.6 or 2.7
-  - wxPython 2.8
-  - Twisted 10.2.0-1
+ - Python 2.6 or 2.7
+ - wxPython 2.8
+ - Twisted 10.2.0-1 (Although the needed files do come bundled in the repo)
+
 
 PythonForumIDE uses the PEP-8 Coding Style, which can be found here:
 http://www.python.org/dev/peps/pep-0008/
@@ -9,14 +10,18 @@ http://www.python.org/dev/peps/pep-0008/
 When in doubt copy the coding style of the file you are editing.
 
 All id's must come from gui_lib/ide_constants.py.
+
 Do not push to master unless explicitly requested.
+
 If you want to implement a new feature, create an issue ticket
 and a new branch, preferably with the issue number e.g. issue_42
+
 Create a separate branch for any issues or new features.
 See this guide for help: http://progit.org/book/ch3-0.html
 
 The IDE must be able to run on Python 2.6 and 2.7, so please note
 any compatibility issues between the two and avoid them.
+
 Code should be tested on both versions before being committed to master.
 
 To clone the latest PythonForumIDE version simpy use git to clone it:

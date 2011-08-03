@@ -14,7 +14,12 @@ def is_windows():
         return True
     else:
         return False
-    
+
+def introduction():
+    """Returns interpreter infomation."""
+    #yes this is kind of cheeky.
+    return "Python %s" % sys.version
+
 def get_ip():
     """Try and return the local private IP that this computer is using."""
     return socket.gethostbyname(socket.getfqdn())

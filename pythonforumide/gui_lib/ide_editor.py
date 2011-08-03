@@ -3,16 +3,18 @@
 @reviewer: Somelauw, ghoulmaster, David
 """
 
-#YES DIRT HACK GET OVER IT. Dont remove it might go before it goes into master
+#Do not remove
 import sys
 sys.path.append('..')
+#
 
 from utils.textutils import split_comments
 from utils.interpreter import PythonProcessProtocol
-from utils.version import get_python_exe
+from utils.version import get_python_exe, introduction
 from utils.autocomplete import CodeCompletion
 import wx.richtext
 import wx.stc as stc
+from wx import _stc
 import os.path
 import wx
 
@@ -51,7 +53,6 @@ class Editor(stc.StyledTextCtrl):
         self.SetAutoComplete()
     
     def SetAutoComplete(self):
-        self.AutoCompSetSeparator(124)
         self.autocomp = CodeCompletion()
         self.autocomp.add_builtins()
         self.autocomp.add_keywords()
@@ -64,7 +65,7 @@ class Editor(stc.StyledTextCtrl):
         """Rather than do it in the __init__ and to help debugging the styles
         and settings are split into seperate SetOptions, this sets the generic
         options like Tabwidth, expandtab and indentation guides + others."""
-        self.SetLexer(stc.STC_LEX_PYTHON) #is this giving us trouble? 
+        self.SetLexer(stc.STC_LEX_PYTHON)
         self.StyleSetSpec(stc.STC_STYLE_DEFAULT, "face:%(mono)s,size:%(size)d" % faces) #set mono spacing here!
         self.SetTabWidth(4)
         self.SetIndentationGuides(1)
@@ -89,8 +90,7 @@ class Editor(stc.StyledTextCtrl):
      
     def SetStyles(self, lang='python'):
         """This is different from the other Set methods that
-        http://paste.pocoo.org/show/446107/ are called in the 
-        __init__ this one is for the highlighting and syntax of the langauge,
+        are called in the __init__ this one is for the highlighting and syntax of the langauge,
         this will eventually be callable with different langauge styles. 
         For the moment, leave the lang kwarg in. """
         
@@ -184,7 +184,8 @@ class Editor(stc.StyledTextCtrl):
         choices = list(self.autocomp.suggest())
         if choices:
             choices.sort()
-            self.AutoCompShow(self.autocomp.len_entered-1, '|'.join(choices))        
+            self.AutoCompShow(self.autocomp.len_entered-1, ' '.join(choices))
+    
         
     def OnKeyDown(self, event):
         """Defines events for when the user presses a key"""
@@ -199,7 +200,7 @@ class Editor(stc.StyledTextCtrl):
 
     def on_undo(self):
         """Checks if can Undo and if yes undoes"""
-        if self.CanUndo() == 1:
+        if self.CanUndo() == 1: #same as `if not self.CanUndo():` ??
             self.Undo()
         
     def on_redo(self):
@@ -254,7 +255,7 @@ class Editor(stc.StyledTextCtrl):
 
     def on_run(self):
         """Runs selected code in a new window."""
-        # Create a test frame and hook into the caller.
+        # Create a frame and hook into the caller.
         # Allows this frame to be destroyed by the main window on close.
         reactor = wx.GetApp().this_reactor        
         
@@ -262,6 +263,8 @@ class Editor(stc.StyledTextCtrl):
         run_panel = wx.richtext.RichTextCtrl(run_editor, style=wx.TE_READONLY)
         run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
         run_editor.Layout()
+        run_panel.WriteText(introduction())
+        run_panel.Newline()
         
         if self.filepath:
             if self.GetModify():      

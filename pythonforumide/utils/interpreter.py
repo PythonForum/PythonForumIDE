@@ -4,9 +4,6 @@ Created on Mon Jul 25 17:05:42 2011
 
 @author: jakob
 """
-import sys
-sys.path.append('..')
-
 from twisted.internet.protocol import ProcessProtocol
 
 class PythonProcessProtocol(ProcessProtocol):       
@@ -14,7 +11,7 @@ class PythonProcessProtocol(ProcessProtocol):
         self.frame = frame
         
     def connectionMade(self):
-        print "subprocess open.!"
+        print "subprocess open."
 
     def connectionLost(self, reason):
         self.frame.Newline()
@@ -25,13 +22,13 @@ class PythonProcessProtocol(ProcessProtocol):
         print "Got stdout."
     
     def errReceived(self, data):
-        print "Got stderr!"
+        print "Got stderr."
         self.frame.Newline()
         self.frame.BeginTextColour("Red")
         self.frame.WriteText(data)                
         
     def errConnectionLost(self):
-        print "errConnectionLost! The child closed their stderr."
+        print "errConnectionLost, The child closed their stderr."
 
     def processEnded(self, reason):
         print "processEnded, status %d" % (reason.value.exitCode,)
