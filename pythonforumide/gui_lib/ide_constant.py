@@ -75,8 +75,8 @@ id_show_toolbar = _id_text("Show Toolbar", "Show Toolbar", "Show Toolbar",
 #  Search ID
 #===============================================================================
 ID_SEARCH= wx.NewId()
-id_text_search= _id_text("Search\tCtrl+H", "Search",
-                         "Search/replace the active file", wx.ITEM_NORMAL)
+id_text_search= _id_text("Replace\tCtrl+H", "Replace",
+                         "Find and replace in the active file", wx.ITEM_NORMAL)
 #===============================================================================
 #  Run ID
 #===============================================================================
