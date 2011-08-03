@@ -67,6 +67,7 @@ class Editor(stc.StyledTextCtrl):
         options like Tabwidth, expandtab and indentation guides + others."""
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.StyleSetSpec(stc.STC_STYLE_DEFAULT, "face:%(mono)s,size:%(size)d" % faces) #set mono spacing here!
+        # Presumably we should be reading this stuff from config?
         self.SetTabWidth(4)
         self.SetIndentationGuides(1)
         #Indentation will only use space characters if useTabs is false
