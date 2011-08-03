@@ -176,7 +176,6 @@ class Editor(stc.StyledTextCtrl):
                     ch = chr(event.GetUniChar())
                 else:
                     ch = chr(event.GetUniChar()).lower()
-                print ch
                 self.autocomp.update_key(ch)
             except ValueError:
                 self.autocomp.clear()
