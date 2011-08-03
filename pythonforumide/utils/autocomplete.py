@@ -2,15 +2,18 @@
 @author: bunburya
 """
 
+# maybe move these to a separate file eventually
+keywords = set(['and', 'elif', 'is', 'global', 'pass', 'if', 'from',
+    'raise', 'for', 'except', 'finally', 'print', 'import', 'return',
+    'exec', 'else', 'break', 'not', 'class', 'assert', 'in', 'yield',
+    'try', 'while', 'continue', 'del', 'or', 'def', 'lambda'])
+builtins = set(__builtins__.keys())
 
 class CodeCompletion(object):
     """A backend class for code completion.
-    This does more than it needs to for auto-complete in wx (which does
-    most of the work), but the additional methods will be useful with
-    different UI toolkits.
     """
     
-    valid_ch = 'abcdefghijklmnopqrstuvwxyz0123456789_'
+    valid_ch = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
     
     def __init__(self, *modules):
         self._suggestions = set()
@@ -18,6 +21,12 @@ class CodeCompletion(object):
         self._key = []
         for mod in modules:
             self.add_module(mod)
+    
+    def add_builtins(self):
+        self._suggestions.update(builtins)
+    
+    def add_keywords(self):
+        self._suggestions.update(keywords)
     
     def add_module(self, module):
         """Adds the variable and method names from a module to the pool
@@ -47,16 +56,28 @@ class CodeCompletion(object):
         
     def update_key(self, char):
         if not char in self.valid_ch:
-            self._key = []
-            self.clear_cache()
+            self.clear()
         else:
             self._key.append(char)
+    
+    def back(self):
+        try:
+            self._key.pop()
+        except IndexError:
+            pass
     
     def cache(self, c):
         self._cache = c
     
     def clear_cache(self):
         self._cache = set()
+    
+    def clear_key(self):
+        self._key = []
+    
+    def clear(self):
+        self._cache = set()
+        self._key = []
     
     @property
     def choices(self):
