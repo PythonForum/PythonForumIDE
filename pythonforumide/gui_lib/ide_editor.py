@@ -52,7 +52,8 @@ class Editor(stc.StyledTextCtrl):
     
     def SetAutoComplete(self):
         self.autocomp = CodeCompletion()
-        self.autocomp.add_suggestion(*__builtins__.keys())
+        self.autocomp.add_builtins()
+        self.autocomp.add_keywords()
 
     def SetBindings(self):
         """Sets the key events bindings"""
@@ -131,6 +132,11 @@ class Editor(stc.StyledTextCtrl):
     def SmartIndent(self):
         """Handles smart indentation for the editor"""
         # Read settings from the config file
+        
+        # Suggestion: instead of indent_amount and use_tab, maybe just
+        # have one config value, specifying what is to be used as indent.
+        # -bunburya
+        
         indent_amount = int(self.conf["indent"])
         usetab = self.conf["usetab"]
 
@@ -153,19 +159,27 @@ class Editor(stc.StyledTextCtrl):
         self.AddText(indent)
         print self.conf
     
-    def AutoComp(self, event):
+    def AutoComp(self, event, keycode):
         """TODO:
         - If you indent (via tab or SmartIndent) and then autocomplete,
           it seems that the program automatically indents again after
-          printing the word."""
-        
-        try:
-            ch = chr(event.GetUniChar()).lower()
-        except ValueError:
-            self.autocomp.clear_cache()
-            self.autocomp.key = []
-            return
-        self.autocomp.update_key(ch)
+          printing the word.
+        - Properly handle uppercase; the current implementation ignores
+          caps lock.  
+        """
+        if keycode == wx.WXK_BACK:
+            self.autocomp.back()
+        else:
+            try:
+                # this isn't perfect, doesn't handle caps lock
+                if event.ShiftDown():
+                    ch = chr(event.GetUniChar())
+                else:
+                    ch = chr(event.GetUniChar()).lower()
+                self.autocomp.update_key(ch)
+            except ValueError:
+                self.autocomp.clear()
+                return
         choices = list(self.autocomp.suggest())
         if choices:
             choices.sort()
@@ -180,7 +194,7 @@ class Editor(stc.StyledTextCtrl):
             self.SmartIndent()
         else:
             event.Skip()
-        self.AutoComp(event)
+        self.AutoComp(event, key)
 
     def on_undo(self):
         """Checks if can Undo and if yes undoes"""
