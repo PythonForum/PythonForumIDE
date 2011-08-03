@@ -129,8 +129,20 @@ class Editor(stc.StyledTextCtrl):
         self.StyleSetSpec(stc.STC_P_COMMENTBLOCK, "face:%(mono)s,fore:#990000,back:#C0C0C0,italic,size:%(size)d" % faces)
         # End of line where string is not closed
         self.StyleSetSpec(stc.STC_P_STRINGEOL, "face:%(mono)s,fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % faces)
-            
-    def SmartIndent(self):
+    
+    def ParseLastLine(self):
+        """This parses the last line for the purposes of various utils which need it."""
+        last_line_no = self.GetCurrentLine()
+        last_line_code = split_comments(self.GetLine(last_line_no))[0].strip('\t')
+        self.NewLine()
+        self.SmartIndent(last_line_no, last_line_code)
+        if last_line_code.startswith('import'):
+            mod = last_line_code.split()[1]
+            if mod in sys.modules:
+                self.autocomp.add_module(sys.modules[mod])
+        
+    
+    def SmartIndent(self, last_line_no, last_line_code):
         """Handles smart indentation for the editor"""
         # Read settings from the config file
         
@@ -141,14 +153,12 @@ class Editor(stc.StyledTextCtrl):
         indent_amount = int(self.conf["indent"])
         usetab = self.conf["usetab"]
 
-        last_line_no = self.GetCurrentLine()
-        last_line = split_comments(self.GetLine(last_line_no))[0]
-        self.NewLine()
         indent_level = self.GetLineIndentation(last_line_no) // indent_amount
+        print last_line_code
         
-        if last_line.rstrip().endswith(':'):
+        if last_line_code.endswith(':'):
             indent_level += 1
-        elif any(last_line.lstrip().startswith(token) 
+        elif any(last_line_code.startswith(token) 
                  for token in ["return", "break", "yield"]):
             indent_level = max([indent_level - 1, 0])
 
@@ -158,7 +168,6 @@ class Editor(stc.StyledTextCtrl):
             indent = indent_amount * " " * indent_level
 
         self.AddText(indent)
-        print self.conf
     
     def AutoComp(self, event, keycode):
         """TODO:
@@ -192,7 +201,8 @@ class Editor(stc.StyledTextCtrl):
         control = event.ControlDown()
         alt = event.AltDown()
         if key == wx.WXK_RETURN and not control and not alt:
-            self.SmartIndent()
+            self.ParseLastLine()
+            
         else:
             event.Skip()
         self.AutoComp(event, key)
