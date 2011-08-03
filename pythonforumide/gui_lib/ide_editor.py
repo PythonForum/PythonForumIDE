@@ -139,9 +139,24 @@ class Editor(stc.StyledTextCtrl):
         self.SmartIndent(last_line_no, last_line_code)
         if last_line_code.startswith('import'):
             mod = last_line_code.split()[1]
-            if mod in sys.modules:
+            try:
                 self.autocomp.add_module(sys.modules[mod])
-        
+            except KeyError, AttributeError:
+                pass                
+            
+        elif last_line_code.startswith('from'):
+            line = last_line_code.split()
+            #from x import y
+            #line[0] = 'from' 
+            #line[1] = 'x'
+            #line[2] = 'import'
+            #line[3] = 'y'
+            package = line[1]
+            imp = line[3]
+            try:
+                self.autocomp.add_module(getattr(sys.modules[package], imp))
+            except KeyError, AttributeError:
+                pass #silently skip the autocomplete
     
     def SmartIndent(self, last_line_no, last_line_code):
         """Handles smart indentation for the editor"""
