@@ -51,6 +51,7 @@ class Editor(stc.StyledTextCtrl):
         self.SetAutoComplete()
     
     def SetAutoComplete(self):
+        self.AutoCompSetSeparator(124)
         self.autocomp = CodeCompletion()
         self.autocomp.add_builtins()
         self.autocomp.add_keywords()
@@ -184,7 +185,7 @@ class Editor(stc.StyledTextCtrl):
         choices = list(self.autocomp.suggest())
         if choices:
             choices.sort()
-            self.AutoCompShow(self.autocomp.len_entered-1, ' '.join(choices))        
+            self.AutoCompShow(self.autocomp.len_entered-1, '|'.join(choices))        
         
     def OnKeyDown(self, event):
         """Defines events for when the user presses a key"""
