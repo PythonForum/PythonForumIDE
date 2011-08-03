@@ -11,9 +11,6 @@ builtins = set(__builtins__.keys())
 
 class CodeCompletion(object):
     """A backend class for code completion.
-    This does more than it needs to for auto-complete in wx (which does
-    most of the work), but the additional methods will be useful with
-    different UI toolkits.
     """
     
     valid_ch = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
