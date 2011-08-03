@@ -152,21 +152,16 @@ class Editor(stc.StyledTextCtrl):
             #line[2] = 'import'
             #line[3] = 'y'
             package = line[1]
-<<<<<<< HEAD
             imp = line[3] #bug here means this could be "test, a, b c"
             try:
-                if len(imp.split(',') > 1:
+                if len(imp.split(',')) > 1:
                     for item in imp.split(','):
                         self.autocomp.add_module(getattr(sys.modules[package], 
                                                          imp))
                 
                 else:
                     self.autocomp.add_module(getattr(sys.modules[package], imp))
-=======
-            imp = line[3]
-            try:
-                self.autocomp.add_module(getattr(sys.modules[package], imp))
->>>>>>> 2cdbe47a2c8660b0689170062bfa8e5501c9e4fc
+                    
             except KeyError, AttributeError:
                 pass #silently skip the autocomplete
     
