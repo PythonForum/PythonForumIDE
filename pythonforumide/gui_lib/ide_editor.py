@@ -283,9 +283,14 @@ class Editor(stc.StyledTextCtrl):
             script = StringIO()
             script.write(self.GetText())
             script.seek(0)
+            
+            #For some reason we end up with \r\n for line endings.
+            #This sorts that issue out
+            scr = script.read().replace("\r",'')
+            
             reactor.spawnProcess(PythonProcessProtocol(run_panel), 
                                           get_python_exe(), 
-                                            ["python", "-c", script.read()])
+                                            ["python", "-c", scr])
         
         
         return run_panel
