@@ -67,7 +67,9 @@ class _BeautifulConfig(object):
         try:
             self.config = yaml.load(open(filename))
         except IOError:
-            #Raise a config warning error here?
+            self.config = None
+
+        if self.config is None:
             self.config = {}
 
         self.file_config = open(filename, 'w')
@@ -103,14 +105,13 @@ class _UglyConfig(object):
     def __init__(self, profile):
 
         filename = ''.join((profile, ".cfg"))
-        filename = profile
         self.config = ConfigParser.ConfigParser()
         self.config.read(filename)
 
         if not self.config.has_section('ide'):
             self.config.add_section('ide')
 
-        self.file_config = open(filename,'w')
+        self.file_config = open(filename, 'w')
 
     def __setitem__(self, option, value):
         """Set the value to the option inside the default section."""
@@ -147,62 +148,102 @@ else:
 
 
 class IdeConfig(object):
-
+    """ Store's config values in a dict, and to file
+        converts to and from python type"""
     def __init__(self, filepath="", filename="Ide_Config"):
-
+        """ Initialize"""
         if not filepath:
             filepath = os.path.dirname(__file__)
-        self._filepath = filepath
-        self._filename = filename
         self._fullpath = None
         self._data = {}
-        self._get_file_fullpath()
-        self._get_defaults()
+        self._get_file_fullpath(filepath, filename)
+        self.set_defaults()
+        self.read_from_config_file()
 
-    def _get_file_fullpath(self):
-
-        if has_yaml:
-            ext = ".yaml"
-        else:
-            ext = ".cfg"
-
-        _temp_path = os.path.join(self._filepath, self._filename)
-        self._fullpath = ''.join((_temp_path, ext))
-
+    def _get_file_fullpath(self, filepath, filename):
+        """ Works out which config file type and creates if not exists"""
+        _temp_path = os.path.join(filepath, filename)
+        self._fullpath= file_config(_temp_path)
         with open(self._fullpath, "a") as _:
             # Opens file as append to ensure safe creation of the file.
             pass
-
         print ("Config using filepath: %s" % (self._fullpath))
 
-    def _get_defaults(self):
-
-        confile = Config(self._fullpath)
-        self._data["indent"] = confile["indent"] or 4
-        self._data["usetab"] = confile["usetab"] or False
-        self._data["MainFrame.Height"] = confile["MainFrame.Height"] or 600
-        self._data["MainFrame.Width"] = confile["MainFrame.Width"] or 600
+    def read_from_config_file(self):
+        """ reads the config file and over writes defaults if theres as entry"""
+        """ if theres a type flag it converts to the python type"""
+        confile = load_config(self._fullpath)
+        for key, value in self._data.iteritems():
+            config_value = confile[key]
+            if config_value:
+                self._data[key] = self.convert_to_pytype(config_value)
         confile.file_config.close()
-
+        
+    def convert_to_pytype(self, config_value):
+        """ Converts the file stored string to a few python types"""
+        try:
+            get_type, get_value = config_value.split(">")
+            if get_type == "int":
+                return int(get_value)
+            elif get_type == "float":
+                return float(get_value)
+            elif get_type == "bool" and get_value == "True":
+                return True
+            elif get_type == "bool" and get_value == "False":
+                return False
+            else:
+                return str(get_value)
+        except Exception, exception:
+            print ("Exception when convert_to_pytype", exception.message)
+            return str(config_value)
+        
+    def update_configfile(self):
+        """ Writes back the current values to the config file"""
+        confile = load_config(self._fullpath)
+        for key, value in self._data.iteritems():
+            confile[key] = self.convert_pytype_to_str(value)
+        confile.save()
+        confile.file_config.close()
+        
+    def convert_pytype_to_str(self, value):
+        """ Adds a pytype flag to the entry"""
+        get_type = str(type(value))
+        get_type = get_type[:-2].split("'")[1]
+        if get_type == "int":
+            return "int>%s" % (value)
+        elif get_type == "float":
+                return "float>%s" % (value)
+        elif get_type == "bool" and value == True:
+            return "bool>%s" % (value)
+        elif get_type == "bool" and value == False:
+            return "bool>%s" % (value)
+        else:
+            return "str>%s" % (value)
+        
     def __setitem__(self, key, value):
-
+        """ Set the current config value"""
         self._data[key] = value
 
     def __getitem__(self, key):
-
+        """ Get the current config value"""
         return self._data[key]
 
-    def update_configfile(self):
-
-        confile = Config(self._fullpath)
-        for key, value in self._data.iteritems():
-            confile[key] = value
-
-        confile.save()
-        confile.file_config.close()
+        
+    def set_defaults(self):
+        """ Sets default values"""
+        self._data["indent"] = 4
+        self._data["usetab"] = 0
+        self._data["MainFrame.Height"] = 600
+        self._data["MainFrame.Width"] = 600
+        self._data["Test.bool"] = True
+        self._data["Test.int"] = 25
+        self._data["Test.float"] = 0.75
 
 if __name__ == '__main__':
-    ide_config = IdeConfig(config_style=Config)
-    print(ide_config["indent"])
+    ide_config = IdeConfig()
+
+    value = (ide_config["MainFrame.Width"])
+    print (value)
     ide_config.update_configfile()
+
 
