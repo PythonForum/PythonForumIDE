@@ -35,6 +35,22 @@ faces = { 'times': 'Times',
               'size2': 10,
              }
 
+class EditorPanel(wx.Panel):
+    def __init__(self, *args, **kwargs):
+        """ Create a panel with a containing Editor control"""
+        super(EditorPanel, self).__init__(*args, **kwargs)
+        self.SetBackgroundColour((255, 255, 255))
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(sizer)
+        self._create_editor(sizer)
+        
+    def _create_editor(self, sizer):
+        """ Creates the Editor control"""
+        ctrl = Editor(self, style=wx.BORDER_THEME, pos=(-100, -100))
+        sizer.Add(ctrl, 1 , wx.EXPAND | wx.ALL, 1)
+        self.editor = ctrl
+        
+
 class Editor(stc.StyledTextCtrl):
     """Inherits wxStyledTextCtrl and handles all editor functions"""
     def __init__(self, parent):
