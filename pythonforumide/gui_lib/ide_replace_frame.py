@@ -27,7 +27,9 @@ class ReplaceFrame(SimpleFrame):
         self.lbl_replace_with = wx.StaticText(_panel, -1, "Replace with: ", (5, 53), (100, -1))
         self.txt_replace_with = wx.TextCtrl(_panel, id=-1, pos=(100, 50), size=(300, -1))
         self.replace_id = wx.NewId()
-        self.replace_button = wx.Button(_panel, self.replace_id, "Replace", pos=(5, 80), size=(90, -1))
+        self.replace_button = wx.Button(_panel, self.replace_id, "Replace", pos=(5, 110), size=(90, -1))
+        self.case_check = wx.CheckBox(_panel, -1, "Case Sensitive", pos=(5, 80), size=(-1, -1))
+        
         self.Bind(wx.EVT_BUTTON, self.on_replace, id=self.replace_id)
         self.sizer.Add(_panel, 1, wx.EXPAND)
 
