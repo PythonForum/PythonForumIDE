@@ -1,4 +1,6 @@
 import wx
+import string
+from itertools import izip_longest
 
 from ide_simple_frame import SimpleFrame
 
@@ -27,14 +29,34 @@ class ReplaceFrame(SimpleFrame):
         self.lbl_replace_with = wx.StaticText(_panel, -1, "Replace with: ", (5, 53), (100, -1))
         self.txt_replace_with = wx.TextCtrl(_panel, id=-1, pos=(100, 50), size=(300, -1))
         self.replace_id = wx.NewId()
-        self.replace_button = wx.Button(_panel, self.replace_id, "Replace", pos=(5, 80), size=(90, -1))
+        self.replace_button = wx.Button(_panel, self.replace_id, "Replace", pos=(5, 110), size=(90, -1))
+        self.case_check = wx.CheckBox(_panel, -1, "Case Sensitive", pos=(5, 80), size=(-1, -1))
+        
         self.Bind(wx.EVT_BUTTON, self.on_replace, id=self.replace_id)
         self.sizer.Add(_panel, 1, wx.EXPAND)
+
+    def incase_replace(self, st, x, y):
+        """Replaces x with y in an non case sensitive way"""
+        mod = st.lower().replace(x.lower(), y)
+        out = ''
+        for x, y in izip_longest(st, mod, fillvalue=' '):
+            if x == y:
+                out += y
+            elif (x in string.ascii_uppercase) and (x == y.upper()):
+                out += x
+            else:
+                out += y
+        return out
 
     def on_replace(self, event):
         """Replaces text on the current editor (self.active_editor)"""
         self.str_to_replace = self.txt_to_replace.GetValue()
         self.str_replace_with = self.txt_replace_with.GetValue()
-        self.active_editor.SetText(self.active_editor.GetText().replace(
+        if self.case_check.GetValue(): #If case sensitive on
+            self.active_editor.SetText(self.active_editor.GetText().replace(
                 self.str_to_replace, self.str_replace_with))
+        else: #If case sensitive disabled
+            self.active_editor.SetText(self.incase_replace(
+                self.active_editor.GetText(), self.str_to_replace,
+                self.str_replace_with))
         self.Destroy()
