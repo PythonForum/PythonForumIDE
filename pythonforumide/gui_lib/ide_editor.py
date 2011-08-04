@@ -199,35 +199,26 @@ class Editor(stc.StyledTextCtrl):
             event.Skip()
         self.AutoComp(event, key)
 
-    def on_undo(self):
-        """Checks if can Undo and if yes undoes"""
-        if self.CanUndo() == 1: #same as `if not self.CanUndo():` ??
-            self.Undo()
-        
-    def on_redo(self):
-        """Checks if can Redo and if yes redoes"""
-        if self.CanRedo() == 1:
-            self.Redo()
+    def CanCut(self):
+        """ Returns true if there's a selection that can be cut"""
+        if self.GetSelectedText():
+            return True
+        return False
+    
+    def CanCopy(self):
+        """ Returns true if there's a selection that can be copied"""
+        """ Uses CanCut could be altered for its own checking if required"""
+        return self.CanCut()
+    
+    def CanPaste(self):
+        """ Returns ture if the clipboard contains text"""
+        """ Note: I dont know at present how to check clipboard for contents"""
+        return True
 
-    def on_cut(self):
-        """Cuts selected text"""
-        self.Cut()
-        
-    def on_copy(self):
-        """Copies selected text"""
-        self.Copy()
-        
-    def on_paste(self):
-        """Pastes selected text"""
-        self.Paste()
-        
-    def on_clear(self):
-        """Deletes selected text"""
-        self.Clear()
-
-    def on_select_all(self):
-        """Selects all the text"""
-        self.SelectAll()
+    def CanDelete(self):
+        """ Returns true if there's a selection that can be deleted"""
+        """ Uses CanCut could be altered for its own checking if required"""
+        return self.CanCut()
         
     def load_file(self, path):
         """Loads a new file"""
@@ -242,58 +233,6 @@ class Editor(stc.StyledTextCtrl):
         """Save the current file as a new filepath"""
         self.filepath= filepath
         return self.save_file()
-    
-    def on_replace(self):
-        """Displays a find/replace dialog"""
-        
-        # Create a search frame and hook into the caller.
-        # Allows this frame to be destroyed by the main window on close.
-        replace_frame = ReplaceFrame(active_editor=self,
-                                     parent=wx.GetApp().TopWindow,
-                                     title="Find and Replace", size=(500, 200))
-        replace_frame.Layout()
-        
-
-    def on_run(self):
-        """Runs selected code in a new window."""
-        # Create a frame and hook into the caller.
-        # Allows this frame to be destroyed by the main window on close.
-        reactor = wx.GetApp().this_reactor        
-        
-        run_editor = SimpleFrame(wx.GetApp().TopWindow, title="")
-        run_panel = wx.richtext.RichTextCtrl(run_editor, style=wx.TE_READONLY)
-        run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
-        run_editor.Layout()
-        run_panel.WriteText(introduction())
-        run_panel.Newline()
-        
-        if self.filepath:
-            if self.GetModify():      
-                self.SaveFile(self.filepath)
-            filename = os.path.split(self.filepath)[1]
-            run_panel.WriteText("Running %s" % filename)
-            run_panel.Newline()
-            reactor.spawnProcess(PythonProcessProtocol(run_panel), 
-                                          get_python_exe(), 
-                                          ["python", str(self.filepath)])
-        
-        else:
-            run_panel.WriteText("Running unsaved script.")
-            run_panel.Newline()
-            script = StringIO()
-            script.write(self.GetText())
-            script.seek(0)
-            
-            #For some reason we end up with \r\n for line endings.
-            #This sorts that issue out
-            scr = script.read().replace("\r",'')
-            
-            reactor.spawnProcess(PythonProcessProtocol(run_panel), 
-                                          get_python_exe(), 
-                                            ["python", "-c", scr])
-        
-        
-        return run_panel
 
 if __name__=='__main__':
     """Adds the editor to the frame"""
