@@ -53,9 +53,9 @@ class EditorPanel(wx.Panel):
 
 class Editor(stc.StyledTextCtrl):
     """Inherits wxStyledTextCtrl and handles all editor functions"""
-    def __init__(self, parent):
+    def __init__(self, *args, **kwargs):
         """Starts the editor and calls some editor-related functions"""
-        super(Editor, self).__init__(parent)
+        super(Editor, self).__init__(*args, **kwargs)
 
         self.conf = wx.GetApp().config
 
