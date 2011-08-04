@@ -10,7 +10,6 @@ import os
 import wx
 import wx.lib.agw.flatnotebook as fnb
 from ide_editor import EditorPanel
-from ide_framed_panel import HeaderPanel
 
 class NoteBookPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
