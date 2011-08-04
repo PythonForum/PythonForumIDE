@@ -8,12 +8,24 @@ import wx
 import ide_constant as ide
 from ide_images import menu_icons
 
+class ToolBarPanel(wx.Panel):
+    """ Creates a panel to hold the toolbar"""
+    def __init__(self, *args, **kwargs):
+        super(ToolBarPanel, self).__init__(*args, **kwargs)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(sizer)
+        ctrl = ToolBar(self, style=wx.TB_HORIZONTAL | wx.TB_FLAT)
+        sizer.Add(ctrl, 0, wx.EXPAND | wx.LEFT)
+        self.toolbar = ctrl
+        self.Layout()
+
+        
 
 class ToolBar(wx.ToolBar):
     def __init__(self, *args, **kwargs):
         """Create the toolbar"""
-        super(ToolBar, self).__init__( *args, **kwargs)
-        self.SetToolBitmapSize((24,24))
+        super(ToolBar, self).__init__(*args, **kwargs)
+        self.SetToolBitmapSize((24, 24))
         self._add_toolbar_btn(ide.ID_NEW, ide.id_text_new,
                               menu_icons.get_icon_new())
         
@@ -47,6 +59,7 @@ class ToolBar(wx.ToolBar):
         
         self.Realize()
           
-    def _add_toolbar_btn(self, id, id_text, icon_bmp= None):
-        self.AddLabelTool(id= id, label= id_text.toolbar, bitmap= icon_bmp,
-                          shortHelp= id_text.toolbar, longHelp= id_text.status)
+    def _add_toolbar_btn(self, id, id_text, icon_bmp=None):
+        """ Creates tool bar buttons"""
+        self.AddLabelTool(id=id, label=id_text.toolbar, bitmap=icon_bmp,
+                          shortHelp=id_text.toolbar, longHelp=id_text.status)
