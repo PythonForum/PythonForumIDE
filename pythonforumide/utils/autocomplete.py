@@ -85,13 +85,8 @@ class CodeCompletion(object):
         try:
             char = self._key.pop()
         except IndexError:
-            return
-        if char == '.':
-            try:
+            if self._context_ns:
                 self.key = self._context_ns.pop()
-                print self.key
-            except IndexError:
-                pass
     
     def cache(self, c):
         self._cache = c
