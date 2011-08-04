@@ -235,9 +235,10 @@ class IdeConfig(object):
         self._data["usetab"] = 0
         self._data["MainFrame.Height"] = 600
         self._data["MainFrame.Width"] = 600
-        self._data["Test.bool"] = True
-        self._data["Test.int"] = 25
-        self._data["Test.float"] = 0.75
+        self._data["MainFrame.XPos"]= 0
+        self._data["MainFrame.YPos"]= 0
+        self._data["MainMenu.View.Toolbar.Show"]= True
+
 
 if __name__ == '__main__':
     ide_config = IdeConfig()
