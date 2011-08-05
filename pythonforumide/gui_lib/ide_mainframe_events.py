@@ -107,6 +107,7 @@ class MainFrameEvents(object):
     
     def _on_editor_selectall(self, event):
         """Selectall for the current editor tab"""
+        active_editor= self.notebook.editor_tab_get_editor()
         if active_editor:
             self.mainframe.editor_selectall()
 #-------------------------------------------------------------------- Menu View
