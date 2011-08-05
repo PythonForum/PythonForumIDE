@@ -24,7 +24,7 @@ class CodeCompletion(object):
         self._current_ns = ''
         self._cache = set()
         self._key = []
-        self._context_ns = []
+        self._context_ns = ['']
         for mod in modules:
             self.add_module(mod)
     
@@ -39,6 +39,7 @@ class CodeCompletion(object):
         """Adds the variable and method names from a module to the pool
         of potential suggestions.
         """
+        print 'adding module %s' % module
         self._namespaces[module.__name__] = dir(module)
     
     def add_suggestions(self, suggest, ns=''):
@@ -85,8 +86,11 @@ class CodeCompletion(object):
         try:
             char = self._key.pop()
         except IndexError:
-            if self._context_ns:
+            if len(self._context_ns) > 1:
                 self.key = self._context_ns.pop()
+            else:
+                self.clear_key()
+            self.switch_ns(self._context_ns[-1])
     
     def cache(self, c):
         self._cache = c
