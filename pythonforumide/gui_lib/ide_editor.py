@@ -14,7 +14,6 @@ from utils.version import get_python_exe, introduction
 from utils.autocomplete import CodeCompletion
 import wx.richtext
 import wx.stc as stc
-from wx import _stc
 import os.path
 import wx
 
