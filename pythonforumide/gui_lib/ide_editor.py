@@ -249,7 +249,7 @@ class Editor(stc.StyledTextCtrl):
         # Allows this frame to be destroyed by the main window on close.
         replace_frame = ReplaceFrame(active_editor=self,
                                      parent=wx.GetApp().TopWindow,
-                                     title="Find and Replace", size=(410, 150))
+                                     title="Find and Replace", size=(500, 200))
         replace_frame.Layout()
         
 
