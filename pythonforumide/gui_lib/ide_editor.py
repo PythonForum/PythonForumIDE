@@ -225,8 +225,9 @@ class Editor(stc.StyledTextCtrl):
         control = event.ControlDown()
         alt = event.AltDown()
         if key == wx.WXK_RETURN and not control and not alt:
+            if self.AutoCompActive():
+                self.autocomp.on_complete()
             self.ParseLastLine()
-            
         else:
             event.Skip()
         self.AutoComp(event, key)

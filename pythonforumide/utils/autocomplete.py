@@ -2,6 +2,10 @@
 @author: bunburya
 """
 
+# TODO:
+# - Find some way of inserting a hook in the class to be called when
+#   AutoComplete is actually acted on.
+
 class NoSuchNamespaceError(Exception): pass
 
 # maybe move these to a separate file eventually
@@ -13,8 +17,7 @@ keywords = set(['and ', 'elif ', 'is ', 'global ', 'pass', 'if ',
 builtins = set(__builtins__.keys())
 
 class CodeCompletion(object):
-    """A backend class for code completion.
-    """
+    """A backend class for code completion."""
     
     valid_ch = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
     
@@ -63,20 +66,32 @@ class CodeCompletion(object):
         don't unnecessarily repeat searches.
         """
         if key is None:
-            key = ''.join(self._key)
-        if not key:
+            key = self.key
+        if not key and len(self._context_ns) < 2:
             return set()
         pool = self._cache or self._namespaces[self._current_ns]
         suggs = set(s for s in pool if s.startswith(key))
         self._cache = set(suggs)
         return suggs
+    
+    def handle_point(self):
+        """Called when the '.' char is fed to update_key."""
+        key = self.key
+        try:
+            self.switch_ns(key)
+        except NoSuchNamespaceError:
+            return
+        self._context_ns.append(key)
+        print self._context_ns
+        self.clear_key()
+    
+    def back_to_global(self):
+        self._context_ns = ['']
+        self.switch_ns('')
         
     def update_key(self, char):
         if char == '.':
-            self.switch_ns(self.key)
-            self._context_ns.append(self.key)
-            print self._context_ns
-            self.clear_key()
+            self.handle_point()
         elif not char in self.valid_ch:
             self.clear()
         else:
@@ -111,6 +126,10 @@ class CodeCompletion(object):
             self.clear_cache()
         else:
             raise NoSuchNamespaceError(new)
+    
+    def on_complete(self):
+        """This should be called when the user completes using the autocomp."""
+        self.back_to_global()
     
     @property
     def choices(self):
