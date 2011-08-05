@@ -8,7 +8,7 @@
 
 class NoSuchNamespaceError(Exception): pass
 
-# maybe move these to a separate file eventually
+# Nah leave them here.
 keywords = set(['and ', 'elif ', 'is ', 'global ', 'pass', 'if ',
     'from ', 'raise ', 'for ', 'except ', 'finally', 'print ',
     'import ', 'return ', 'exec ', 'else', 'break', 'not ', 'class ',
@@ -127,6 +127,27 @@ class CodeCompletion(object):
         else:
             raise NoSuchNamespaceError(new)
     
+    def parse_imports(x):
+        """Parses an import in both formats. Returns the package and module
+        Always returns in this format. (package, list_of_modules, as_mask)
+        Some of those results can be None"""
+        line = x.split(' ')
+        if line[0] == 'import':
+            if 'as' in line:
+                las = line.index('as')
+                return (None, line[1:las], line[las:])
+            else:
+                return (None, [item for item in line[1].split(',')], None)
+
+        elif line[0] == 'from':
+            if 'as' in line:
+                #holy shit they used from x import y as z !
+                pass
+            else:
+                if len(line[3].split(',')) > 1:
+                    return (line[1], [item for item in line[3].split(',')], None)
+                
+    
     def on_complete(self):
         """This should be called when the user completes using the autocomp."""
         self.back_to_global()
@@ -140,7 +161,7 @@ class CodeCompletion(object):
     def key(self):
         return ''.join(self._key)
     
-    @key.setter
+    #@key.setter
     def key(self, new):
         self._key = list(new)
     
