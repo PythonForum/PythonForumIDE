@@ -53,9 +53,7 @@ class MainFrame(wx.Frame):
         self._sizer.AddSpacer((-1, 2))
         self.notebook = ctrl.notebook
         self.console= ctrl.console_rich_text
-#===============================================================================
-# Apply config settings
-#===============================================================================
+
     def _apply_config_settings(self):
         """ Applys the stored config values"""
         self.SetSize((self._config["MainFrame.Width"],
@@ -66,9 +64,6 @@ class MainFrame(wx.Frame):
                 self._config["MainMenu.View.Toolbar.Show"])
         
 
-#===============================================================================
-# Store config settings
-#===============================================================================
     def _store_config_settings(self):
         """ Stores the current config values"""
         width, height = self.GetSizeTuple()
@@ -79,9 +74,7 @@ class MainFrame(wx.Frame):
         self._config["MainFrame.YPos"]= ypos 
         self._config["MainMenu.View.Toolbar.Show"]= \
                 self.MenuBar.IsChecked(ID_SHOW_TOOLBAR)
-#===============================================================================
-# Editor actions        
-#===============================================================================
+
     def editor_tab_get_editor(self):
         """ Get the currently active editor instance from notebook"""
         return self.notebook.editor_tab_get_editor()
@@ -193,9 +186,11 @@ class MainFrame(wx.Frame):
             script = StringIO()
             script.write(active_editor.GetText())
             script.seek(0)
+            scr = script.read().replace("\r",'')            
+            
             reactor.spawnProcess(PythonProcessProtocol(run_panel),
                                           get_python_exe(),
-                                            ["python", "-c", script.read()])
+                                            ["python", "-c", scr])
         
         
         return run_panel
