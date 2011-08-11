@@ -25,7 +25,7 @@ class ToolBar(wx.ToolBar):
     def __init__(self, *args, **kwargs):
         """Create the toolbar"""
         super(ToolBar, self).__init__(*args, **kwargs)
-        self.SetToolBitmapSize((24, 24))
+        self.SetToolBitmapSize((16, 16))
         self._add_toolbar_btn(ide.ID_NEW, ide.id_text_new,
                               menu_icons.get_icon_new())
         
