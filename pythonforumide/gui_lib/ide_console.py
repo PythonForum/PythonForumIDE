@@ -12,19 +12,20 @@ class ConsolePanel(wx.Panel):
         super(ConsolePanel, self).__init__(*args, **kwargs)
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self._create_rich_text_ctrl()
-        
+
         self.SetSizer(self.sizer)
         self.Layout()
-        
-    def _create_rich_text_ctrl(self):
-        self._rt_ctrl = RichTextCtrl(self, style=wx.TE_READONLY)
-        self.sizer.Add(self._rt_ctrl, 1, wx.EXPAND | wx.ALL, 1)
-        
 
+    def _create_rich_text_ctrl(self):
+        self._rt_ctrl = RichTextCtrl(self, style = wx.TE_READONLY)
+        monospace_font = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL,
+                                 False, u"Monospace")
+        self._rt_ctrl.SetFont(monospace_font)
+        self.sizer.Add(self._rt_ctrl, 1, wx.EXPAND | wx.ALL, 1)
 
 if __name__ == '__main__':
     import ide_test_app as wx_app
-    import ide_simple_frame 
+    import ide_simple_frame
     app = wx_app.Wx_App(False)
     frame = ide_simple_frame.SimpleFrame(None,
                                        title="Testing console without events")
