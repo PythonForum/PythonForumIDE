@@ -20,21 +20,20 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-
 class MainFrame(wx.Frame):
     """Class with the GUI and GUI functions"""
 
     def __init__(self, *args, **kwargs):
         """Creates the frame, calls some construction methods."""
         super(MainFrame, self).__init__(*args, **kwargs)
-        self._config= wx.GetApp().config
+        self._config = wx.GetApp().config
         self._create_menu()
         self.SetInitialSize((600,600))
         self.CreateStatusBar()
-        self._frame_sizer= wx.BoxSizer(wx.VERTICAL)
-        self._frame_panel= wx.Panel(self)
+        self._frame_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._frame_panel = wx.Panel(self)
         self._frame_sizer.Add(self._frame_panel, 1, wx.EXPAND)
-        self._sizer= wx.BoxSizer(wx.VERTICAL)
+        self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._frame_panel.SetSizer(self._sizer)
         self._create_main_panel()
         self.SetSizer(self._frame_sizer)
@@ -50,10 +49,10 @@ class MainFrame(wx.Frame):
         self._sizer.AddSpacer((-1, 2))
         ctrl= MainFramePanel(self._frame_panel)
         self._sizer.Add(ctrl, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 2)
-        self.mainframe_panel= ctrl
+        self.mainframe_panel = ctrl
         self._sizer.AddSpacer((-1, 2))
         self.notebook = ctrl.notebook
-        self.console= ctrl.console_rich_text
+        self.console = ctrl.console_rich_text
 
     def _apply_config_settings(self):
         """ Applys the stored config values"""
@@ -63,7 +62,6 @@ class MainFrame(wx.Frame):
                            self._config["MainFrame.YPos"])
         self.menu_view_toolbar_show(
                 self._config["MainMenu.View.Toolbar.Show"])
-
 
     def _store_config_settings(self):
         """ Stores the current config values"""
@@ -77,7 +75,7 @@ class MainFrame(wx.Frame):
                 self.MenuBar.IsChecked(ID_SHOW_TOOLBAR)
 
     def editor_tab_get_editor(self):
-        """ Get the currently active editor instance from notebook"""
+        """Returns the currently active editor instance from notebook"""
         return self.notebook.editor_tab_get_editor()
 
     def editor_open_file(self):
@@ -131,19 +129,19 @@ class MainFrame(wx.Frame):
 
     def editor_paste(self):
         """Paste changes in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.Paste()
 
     def editor_delete_selection(self):
         """Deletes the selection in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.Clear()
 
     def editor_selectall(self):
         """Selectall in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.SelectAll()
 
@@ -153,8 +151,8 @@ class MainFrame(wx.Frame):
         # Allows this frame to be destroyed by the main window on close.
         active_editor= self.editor_tab_get_editor()
         replace_frame = ReplaceFrame(active_editor, self,
-                                     title="Find and Replace",
-                                     size=(410, 150))
+                                     title = "Find and Replace",
+                                     size = (410, 150))
         replace_frame.Layout()
 
     def on_run(self):
@@ -193,20 +191,33 @@ class MainFrame(wx.Frame):
                                           get_python_exe(),
                                             ["python", "-c", scr])
 
-
         return run_panel
 #===============================================================================
 # Mainframe actions
 #===============================================================================
-    def on_exit(self):
-        '''Handles the event triggered by the user to exit'''
-        dial = wx.MessageDialog(self,'Do you really want to exit?',
-                        'Exit Python IDE',
-                        wx.YES_NO | wx.ICON_QUESTION)
+    def ask_exit(self):
+        """Asks the user if he really wants to quit"""
+        dial = wx.MessageDialog(None, "Do you really want to exit?",
+                                "Exit Hex Baker", wx.YES_NO | wx.ICON_QUESTION)
 
         if dial.ShowModal() == wx.ID_YES:
             self._store_config_settings()
             self.Destroy()
+
+    def on_exit(self):
+        """Handles the event triggered by the user to exit"""
+        current_text = self.editor_tab_get_editor().GetText()
+
+        #Right now, this check if the current open file (the viewable tab)
+        #has been saved or not. If not, prompt the user about quitting
+        #If it has, just quit
+
+        #TODO Check all tabs, not just the current one
+
+        if self.editor_tab_get_editor().GetModify() == 1:
+            return self.ask_exit()
+
+        return self.Destroy()
 
     def file_dialog(self, prompt, style):
         """Abstracted method to prompt the user for a file path.
@@ -230,7 +241,8 @@ class MainFrame(wx.Frame):
 #===============================================================================
 # state setters
 #===============================================================================
-    def menu_view_toolbar_show(self, enable= True):
+    def menu_view_toolbar_show(self, enable = True):
+        """Hides or shows the toolbar"""
         self.MenuBar.Check(ID_SHOW_TOOLBAR, enable)
         self.mainframe_panel.toolbar_show(enable)
 

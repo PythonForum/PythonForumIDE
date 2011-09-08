@@ -1,8 +1,8 @@
 """
 Created on 31 Jul 2011
 
-@author: D.W., david, confab
-@reviewer: david
+@author: D.W., David, confab
+@reviewer: David
 """
 
 import wx
