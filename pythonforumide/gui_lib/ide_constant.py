@@ -61,7 +61,7 @@ id_text_paste= _id_text("Paste\tCtrl+V", "Paste",
 ID_DELETE= wx.NewId()
 id_text_delete= _id_text("Delete", "Delete",
                          "Delete the selected text", wx.ITEM_NORMAL)
-                 
+
 ID_SELECTALL= wx.NewId()
 id_text_selectall= _id_text("Select All\tCtrl+A",
                             "Select all", "Select all", wx.ITEM_NORMAL)
@@ -83,3 +83,7 @@ id_text_search= _id_text("Replace\tCtrl+H", "Replace",
 ID_RUNFILE=wx.NewId()
 id_text_runfile= _id_text("Run file\tF5", "Run",
                           "Run the active file", wx.ITEM_NORMAL)
+#===============================================================================
+#  Find and Replace IDs
+#===============================================================================
+ID_FIND_CANCEL = wx.NewId()
