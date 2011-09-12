@@ -161,11 +161,11 @@ class ReplaceFramePanel(wx.Panel):
 
         self.GetParent().Destroy()
 
-    def incase_replace(self, st, x, y):
+    def incase_replace(self, text, x, y):
         """Replaces x with y in an non case sensitive way"""
         x = x.lower()
-        idx = st.lower().find(x)
+        idx = text.lower().find(x)
         while idx != -1:
-            st =  st[:idx] + y + st[idx+len(x):]
+            text =  text[:idx] + y + text[idx+len(x):]
             idx = st.lower().find(x)
-        return st
+        return text
