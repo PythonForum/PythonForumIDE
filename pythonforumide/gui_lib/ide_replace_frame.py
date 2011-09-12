@@ -31,8 +31,10 @@ class ReplaceFrame(wx.Dialog):
         self.Destroy()
 
 class ReplaceFramePanel(wx.Panel):
+    """Replace Frame Panel, creates GUI, handles events"""
 
     def __init__(self, *args, **kwargs):
+        """Displays the frame, creates the GUI, inherits variables"""
         super(ReplaceFramePanel, self).__init__(*args, **kwargs)
         self.sizer= wx.BoxSizer(wx.HORIZONTAL)
         self._create_vsizer(self.sizer)
@@ -43,6 +45,7 @@ class ReplaceFramePanel(wx.Panel):
         self.active_editor = self.GetParent().active_editor
 
     def _create_vsizer(self, sizer):
+        """Creates the vertical sizer for the GUI"""
         vsizer= wx.BoxSizer(wx.VERTICAL)
         sizer.Add(vsizer)
         vsizer.AddSpacer((-1, 10))
@@ -52,6 +55,7 @@ class ReplaceFramePanel(wx.Panel):
         vsizer.AddSpacer((-1, 10))
 
     def _create_inputs(self, sizer):
+        """Draws the input textboxes"""
         grid_sizer= wx.FlexGridSizer(cols= 2, vgap= 10, hgap=10)
         sizer.Add(grid_sizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 10)
         ctrl= wx.StaticText(self, label= "Search for:")
@@ -66,6 +70,7 @@ class ReplaceFramePanel(wx.Panel):
         self.ctrl_txt_new= ctrl
 
     def _create_buttons(self, sizer):
+        """Draws the event buttons"""
         box_sizer= wx.BoxSizer(wx.VERTICAL)
         sizer.Add(box_sizer)
         box_sizer.AddSpacer((-1, 10))
@@ -94,6 +99,7 @@ class ReplaceFramePanel(wx.Panel):
                   id = ID_FIND_REPLACE_ALL)
 
     def _create_options(self, sizer):
+        """Draws the checkboxes for options"""
         box_sizer= wx.BoxSizer(wx.VERTICAL)
         sizer.Add(box_sizer)
         ctrl= wx.CheckBox(self, label= " Match whole word only")
