@@ -8,6 +8,7 @@ Created Sun Sep 11 14:16:42 2011
 import wx
 import string
 from itertools import izip_longest
+
 from ide_simple_frame import SimpleFrame
 from ide_constant import ID_FIND_CANCEL, ID_FIND_REPLACE_ALL, ID_FIND_REPLACE
 
@@ -18,9 +19,9 @@ class ReplaceFrame(wx.Dialog):
         """"Displays the frame, creates the GUI"""
         super(ReplaceFrame, self).__init__(*args, **kwargs)
         self.active_editor = active_editor
-        self.sizer= wx.BoxSizer(wx.VERTICAL)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.panel= ReplaceFramePanel(self)
+        self.panel = ReplaceFramePanel(self)
         self.sizer.Add(self.panel, 1, wx.EXPAND)
         self.SetSizerAndFit(self.sizer)
 
@@ -56,39 +57,41 @@ class ReplaceFramePanel(wx.Panel):
 
     def _create_inputs(self, sizer):
         """Draws the input textboxes"""
-        grid_sizer= wx.FlexGridSizer(cols= 2, vgap= 10, hgap=10)
-        sizer.Add(grid_sizer, 0, wx.EXPAND|wx.LEFT|wx.RIGHT, 10)
-        ctrl= wx.StaticText(self, label= "Search for:")
+        grid_sizer = wx.FlexGridSizer(cols = 2, vgap = 10, hgap =10)
+        sizer.Add(grid_sizer, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 10)
+        ctrl = wx.StaticText(self, label = "Search for:")
         grid_sizer.Add(ctrl, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT)
-        self.txt_to_replace = wx.TextCtrl(self, size= (150, -1))
-        grid_sizer.Add(self.txt_to_replace, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT)
-        self.ctrl_txt_exisiting= ctrl
-        ctrl= wx.StaticText(self, label= "Replace with:")
-        grid_sizer.Add(ctrl, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT)
-        self.txt_replace_with = wx.TextCtrl(self, size= (150, -1))
-        grid_sizer.Add(self.txt_replace_with, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_LEFT)
-        self.ctrl_txt_new= ctrl
+        self.txt_to_replace = wx.TextCtrl(self, size = (150, -1))
+        grid_sizer.Add(self.txt_to_replace, 0,
+                       wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT)
+        self.ctrl_txt_exisiting = ctrl
+        ctrl = wx.StaticText(self, label = "Replace with:")
+        grid_sizer.Add(ctrl, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT)
+        self.txt_replace_with = wx.TextCtrl(self, size = (150, -1))
+        grid_sizer.Add(self.txt_replace_with, 0,
+                       wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT)
+        self.ctrl_txt_new = ctrl
 
     def _create_buttons(self, sizer):
         """Draws the event buttons"""
-        box_sizer= wx.BoxSizer(wx.VERTICAL)
+        box_sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(box_sizer)
         box_sizer.AddSpacer((-1, 10))
-        ctrl= wx.Button(self, label= "Find next")
-        box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
-        self.btn_next= ctrl
+        ctrl = wx.Button(self, label = "Find next")
+        box_sizer.Add(ctrl, 0, wx.LEFT | wx.RIGHT, 10)
+        self.btn_next = ctrl
         box_sizer.AddSpacer((-1, 5))
-        ctrl= wx.Button(self, id = ID_FIND_REPLACE, label = "Replace")
-        box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
-        self.btn_replace= ctrl
+        ctrl = wx.Button(self, id = ID_FIND_REPLACE, label = "Replace")
+        box_sizer.Add(ctrl, 0, wx.LEFT | wx.RIGHT, 10)
+        self.btn_replace = ctrl
         box_sizer.AddSpacer((-1, 5))
-        ctrl= wx.Button(self, id = ID_FIND_REPLACE_ALL, label = "Replace all")
-        box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
-        self.btn_replace_all= ctrl
+        ctrl = wx.Button(self, id = ID_FIND_REPLACE_ALL, label = "Replace all")
+        box_sizer.Add(ctrl, 0, wx.LEFT | wx.RIGHT, 10)
+        self.btn_replace_all = ctrl
         box_sizer.AddSpacer((-1, 5))
         ctrl= wx.Button(self, id = ID_FIND_CANCEL, label = "Cancel")
-        box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
-        self.btn_cancel= ctrl
+        box_sizer.Add(ctrl, 0, wx.LEFT | wx.RIGHT, 10)
+        self.btn_cancel = ctrl
         box_sizer.AddSpacer((-1, 10))
 
     def set_binds(self):
@@ -99,15 +102,15 @@ class ReplaceFramePanel(wx.Panel):
 
     def _create_options(self, sizer):
         """Draws the checkboxes for options"""
-        box_sizer= wx.BoxSizer(wx.VERTICAL)
+        box_sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(box_sizer)
-        ctrl= wx.CheckBox(self, label= " Match whole word only")
+        ctrl = wx.CheckBox(self, label = " Match whole word only")
         box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
-        self.check_whole_word= ctrl
+        self.check_whole_word = ctrl
         box_sizer.AddSpacer((-1, 10))
-        self.case_check= wx.CheckBox(self, label= " Match case")
-        box_sizer.Add(self.case_check, 0, wx.LEFT|wx.RIGHT, 10)
-        self.check_match_case= ctrl
+        self.case_check= wx.CheckBox(self, label = " Match case")
+        box_sizer.Add(self.case_check, 0, wx.LEFT | wx.RIGHT, 10)
+        self.check_match_case = ctrl
 
     def on_replace(self, event):
         """Replaces text on the current editor (self.active_editor)"""
@@ -115,7 +118,7 @@ class ReplaceFramePanel(wx.Panel):
         str_replace_with = self.txt_replace_with.GetValue()
 
         current_position = self.active_editor.GetCurrentPos()
-        last_position = len( self.active_editor.GetText() )
+        last_position = len(self.active_editor.GetText())
 
         active_text = self.active_editor.GetTextRange(current_position,
                                                       last_position)
