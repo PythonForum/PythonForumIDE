@@ -206,18 +206,21 @@ class MainFrame(wx.Frame):
 
     def on_exit(self):
         """Handles the event triggered by the user to exit"""
-        current_text = self.editor_tab_get_editor().GetText()
+        try:
+            current_text = self.editor_tab_get_editor().GetText()
 
-        #Right now, this check if the current open file (the viewable tab)
-        #has been saved or not. If not, prompt the user about quitting
-        #If it has, just quit
+            #Right now, this check if the current open file (the viewable tab)
+            #has been saved or not. If not, prompt the user about quitting
+            #If it has, just quit
 
-        #TODO Check all tabs, not just the current one
+            #TODO Check all tabs, not just the current one
 
-        if self.editor_tab_get_editor().GetModify() == 1:
-            return self.ask_exit()
+            if self.editor_tab_get_editor().GetModify() == 1:
+                return self.ask_exit()
 
-        return self.Destroy()
+            return self.Destroy()
+        except AttributeError:
+            return self.Destroy()
 
     def file_dialog(self, prompt, style):
         """Abstracted method to prompt the user for a file path.
