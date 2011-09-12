@@ -9,7 +9,7 @@ import wx
 import string
 from itertools import izip_longest
 from ide_simple_frame import SimpleFrame
-from ide_constant import ID_FIND_CANCEL, ID_FIND_REPLACE_ALL
+from ide_constant import ID_FIND_CANCEL, ID_FIND_REPLACE_ALL, ID_FIND_REPLACE
 
 class ReplaceFrame(wx.Dialog):
     """Class with the GUI and the GUI functions"""
@@ -78,25 +78,24 @@ class ReplaceFramePanel(wx.Panel):
         box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
         self.btn_next= ctrl
         box_sizer.AddSpacer((-1, 5))
-        ctrl= wx.Button(self, label= "Replace")
+        ctrl= wx.Button(self, id = ID_FIND_REPLACE, label = "Replace")
         box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
         self.btn_replace= ctrl
         box_sizer.AddSpacer((-1, 5))
-        ctrl= wx.Button(self, id=ID_FIND_REPLACE_ALL, label= "Replace all")
+        ctrl= wx.Button(self, id = ID_FIND_REPLACE_ALL, label = "Replace all")
         box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
         self.btn_replace_all= ctrl
         box_sizer.AddSpacer((-1, 5))
-        ctrl= wx.Button(self, id = ID_FIND_CANCEL, label= "Cancel")
+        ctrl= wx.Button(self, id = ID_FIND_CANCEL, label = "Cancel")
         box_sizer.Add(ctrl, 0, wx.LEFT|wx.RIGHT, 10)
         self.btn_cancel= ctrl
         box_sizer.AddSpacer((-1, 10))
 
     def set_binds(self):
         """Binds the events for the panel and the frame"""
-        self.Bind(wx.EVT_BUTTON, self.GetParent().on_cancel,
-                  id = ID_FIND_CANCEL)
-        self.Bind(wx.EVT_BUTTON, self.on_replace,
-                  id = ID_FIND_REPLACE_ALL)
+        self.Bind(wx.EVT_BUTTON, self.GetParent().on_cancel, id=ID_FIND_CANCEL)
+        self.Bind(wx.EVT_BUTTON, self.on_replace, id = ID_FIND_REPLACE)
+        self.Bind(wx.EVT_BUTTON, self.on_replace_all, id = ID_FIND_REPLACE_ALL)
 
     def _create_options(self, sizer):
         """Draws the checkboxes for options"""
@@ -112,15 +111,38 @@ class ReplaceFramePanel(wx.Panel):
 
     def on_replace(self, event):
         """Replaces text on the current editor (self.active_editor)"""
-        self.str_to_replace = self.txt_to_replace.GetValue()
-        self.str_replace_with = self.txt_replace_with.GetValue()
+        str_to_replace = self.txt_to_replace.GetValue()
+        str_replace_with = self.txt_replace_with.GetValue()
+
+        current_position = self.active_editor.GetCurrentPos()
+        last_position = len( self.active_editor.GetText() )
+
+        active_text = self.active_editor.GetTextRange(current_position,
+                                                      last_position)
+        first_part_of_text = self.active_editor.GetTextRange(0,
+                                                             current_position)
+
+        new_text = self.replace(active_text, str_to_replace, str_replace_with)
+        self.active_editor.SetText(first_part_of_text + new_text)
+
+        self.GetParent().Destroy()
+
+    def replace(self, text, to_replace, replace_width):
+        """Replaces 'to_replace' by 'replace_width' on 'text'"""
         if self.case_check.GetValue(): #If case sensitive on
-            self.active_editor.SetText(self.active_editor.GetText().replace(
-                self.str_to_replace, self.str_replace_with))
+            return text.replace(to_replace, replace_width)
         else: #If case sensitive disabled
-            self.active_editor.SetText(self.incase_replace(
-                self.active_editor.GetText(), self.str_to_replace,
-                self.str_replace_with))
+            return self.incase_replace(text, to_replace, replace_width)
+
+    def on_replace_all(self, event):
+        """Replaces on the whole document"""
+        str_to_replace = self.txt_to_replace.GetValue()
+        str_replace_with = self.txt_replace_with.GetValue()
+        active_text = self.active_editor.GetText()
+
+        new_text = self.replace(active_text, str_to_replace, str_replace_with)
+        self.active_editor.SetText(new_text)
+
         self.GetParent().Destroy()
 
     def incase_replace(self, st, x, y):
