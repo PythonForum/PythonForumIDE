@@ -148,7 +148,7 @@ class ReplaceFramePanel(wx.Panel):
 
         self.GetParent().Destroy()
 
-    def incase_replace(st, x, y):
+    def incase_replace(self, st, x, y):
         """Replaces x with y in an non case sensitive way"""
         x = x.lower()
         idx = st.lower().find(x)
