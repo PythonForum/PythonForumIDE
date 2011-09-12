@@ -34,10 +34,10 @@ class ReplaceFrame(wx.Dialog):
 class ReplaceFramePanel(wx.Panel):
     """Replace Frame Panel, creates GUI, handles events"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, parent):
         """Displays the frame, creates the GUI, inherits variables"""
-        super(ReplaceFramePanel, self).__init__(*args, **kwargs)
-        self.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
+        super(ReplaceFramePanel, self).__init__(parent)
+        self.Bind(wx.EVT_KEY_UP, self.on_key_down)
         self.sizer= wx.BoxSizer(wx.HORIZONTAL)
         self._create_vsizer(self.sizer)
         self._create_buttons(self.sizer)
@@ -96,7 +96,8 @@ class ReplaceFramePanel(wx.Panel):
         box_sizer.AddSpacer((-1, 10))
 
     def on_key_down(self, event):
-        print "hey"
+        if event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.GetParent().Destroy()
         event.Skip()
 
     def set_binds(self):
