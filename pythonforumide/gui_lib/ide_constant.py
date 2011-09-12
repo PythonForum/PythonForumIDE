@@ -87,3 +87,4 @@ id_text_runfile= _id_text("Run file\tF5", "Run",
 #  Find and Replace IDs
 #===============================================================================
 ID_FIND_CANCEL = wx.NewId()
+ID_FIND_REPLACE_ALL = wx.NewId()
