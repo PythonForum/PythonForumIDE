@@ -37,6 +37,7 @@ class ReplaceFramePanel(wx.Panel):
     def __init__(self, *args, **kwargs):
         """Displays the frame, creates the GUI, inherits variables"""
         super(ReplaceFramePanel, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_KEY_DOWN, self.on_key_down)
         self.sizer= wx.BoxSizer(wx.HORIZONTAL)
         self._create_vsizer(self.sizer)
         self._create_buttons(self.sizer)
@@ -94,6 +95,10 @@ class ReplaceFramePanel(wx.Panel):
         self.btn_cancel = ctrl
         box_sizer.AddSpacer((-1, 10))
 
+    def on_key_down(self, event):
+        print "hey"
+        event.Skip()
+
     def set_binds(self):
         """Binds the events for the panel and the frame"""
         self.Bind(wx.EVT_BUTTON, self.GetParent().on_cancel, id=ID_FIND_CANCEL)
@@ -116,6 +121,9 @@ class ReplaceFramePanel(wx.Panel):
         """Replaces text on the current editor (self.active_editor)"""
         str_to_replace = self.txt_to_replace.GetValue()
         str_replace_with = self.txt_replace_with.GetValue()
+
+        if str_to_replace or str_replace_with == "":
+            return
 
         current_position = self.active_editor.GetCurrentPos()
         last_position = len(self.active_editor.GetText())
@@ -141,6 +149,10 @@ class ReplaceFramePanel(wx.Panel):
         """Replaces on the whole document"""
         str_to_replace = self.txt_to_replace.GetValue()
         str_replace_with = self.txt_replace_with.GetValue()
+
+        if str_to_replace or str_replace_with == "":
+            return
+
         active_text = self.active_editor.GetText()
 
         new_text = self.replace(active_text, str_to_replace, str_replace_with)
