@@ -40,7 +40,7 @@ class MainFramePanel(wx.Panel):
         headered_panel = HeaderedPanel(self, style = wx.BORDER_THEME)
         HeaderedPanelEvents(headered_panel)
         self._sizer.Add(headered_panel, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 2)
-        ctrl = headered_panel.add_panel_ctrl(NoteBookPanel, "Editor", 100)
+        ctrl = headered_panel.add_panel_ctrl(NoteBookPanel, "", 100)
         NotebookEvents(ctrl)
         self.notebook = ctrl.notebook
 
