@@ -254,16 +254,3 @@ class Editor(stc.StyledTextCtrl):
         """Save the current file as a new filepath"""
         self.filepath= filepath
         return self.save_file()
-
-if __name__=='__main__':
-    """Adds the editor to the frame"""
-    import ide_test_app as wx_app
-    import ide_simple_frame
-    app = wx_app.Wx_App(False)
-    frame= ide_simple_frame.SimpleFrame(None, title= "Testing editor")
-    panel= ide_simple_frame.TestPanel(frame)
-    frame.sizer.Add(panel, 1, wx.EXPAND)
-    editor= Editor(panel)
-    panel.sizer.Add(editor, 1, wx.EXPAND)
-    frame.Layout()
-    app.MainLoop()
