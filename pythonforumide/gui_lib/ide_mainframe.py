@@ -159,10 +159,10 @@ class MainFrame(wx.Frame):
         # Allows this frame to be destroyed by the main window on close.
         reactor = wx.GetApp().this_reactor
 
-#        run_editor = SimpleFrame(wx.GetApp().TopWindow, title="")
-#        run_panel = wx.richtext.RichTextCtrl(run_editor, style=wx.TE_READONLY)
-#        run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
-#        run_editor.Layout()
+#       run_editor = SimpleFrame(wx.GetApp().TopWindow, title="")
+#       run_panel = wx.richtext.RichTextCtrl(run_editor, style=wx.TE_READONLY)
+#       run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
+#       run_editor.Layout()
 
         run_panel = self.console
         active_editor = self.editor_tab_get_editor()
@@ -248,11 +248,3 @@ class MainFrame(wx.Frame):
         """Hides or shows the toolbar"""
         self.MenuBar.Check(ID_SHOW_TOOLBAR, enable)
         self.mainframe_panel.toolbar_show(enable)
-
-if __name__ == "__main__":
-    import ide_test_app as wx_app
-    app = wx_app.Wx_App(False)
-    main_frame= MainFrame(None, title= "Testing main frame with no events")
-    main_frame.Layout()
-    main_frame.mainframe_panel.toolbar_show(False)
-    app.MainLoop()
