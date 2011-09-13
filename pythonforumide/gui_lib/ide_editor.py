@@ -42,13 +42,13 @@ class EditorPanel(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
         self._create_editor(sizer)
-        
+
     def _create_editor(self, sizer):
         """ Creates the Editor control"""
         ctrl = Editor(self, style=wx.BORDER_THEME, pos=(-100, -100))
         sizer.Add(ctrl, 1 , wx.EXPAND | wx.ALL, 1)
         self.editor = ctrl
-        
+
 
 class Editor(stc.StyledTextCtrl):
     """Inherits wxStyledTextCtrl and handles all editor functions"""
@@ -59,14 +59,14 @@ class Editor(stc.StyledTextCtrl):
         self.conf = wx.GetApp().config
 
         self.filepath = ''
-        self.indent_level = 0        
-          
-        self.SetGenerics()        
-        self.SetMargins()        
+        self.indent_level = 0
+
+        self.SetGenerics()
+        self.SetMargins()
         self.SetStyles()
         self.SetBindings()
         self.SetAutoComplete()
-    
+
     def SetAutoComplete(self):
         self.autocomp = CodeCompletion()
         self.autocomp.add_builtins()
@@ -75,7 +75,7 @@ class Editor(stc.StyledTextCtrl):
     def SetBindings(self):
         """Sets the key events bindings"""
         self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
-    
+
     def SetGenerics(self):
         """Rather than do it in the __init__ and to help debugging the styles
         and settings are split into seperate SetOptions, this sets the generic
@@ -87,10 +87,10 @@ class Editor(stc.StyledTextCtrl):
         self.SetIndentationGuides(1)
         #Indentation will only use space characters if useTabs is false
         self.SetUseTabs(False)
-        
+
     def SetMargins(self):
         """This is specifically for the margins. Like the other Set methods it
-        is only really to be called in the __init__ its here more for 
+        is only really to be called in the __init__ its here more for
         readability purpsoses than anything else."""
         # margin 0 for breakpoints
         self.SetMarginSensitive(0, True)
@@ -103,20 +103,20 @@ class Editor(stc.StyledTextCtrl):
         # margin 2 for line numbers
         self.SetMarginType(2, stc.STC_MARGIN_NUMBER)
         self.SetMarginWidth(2, 28)
-     
+
     def SetStyles(self, lang='python'):
         """This is different from the other Set methods that
         are called in the __init__ this one is for the highlighting and syntax of the langauge,
-        this will eventually be callable with different langauge styles. 
+        this will eventually be callable with different langauge styles.
         For the moment, leave the lang kwarg in. """
-        
+
         #INDICATOR STYLES FOR ERRORS (self.errorMark)
         self.IndicatorSetStyle(2, stc.STC_INDIC_SQUIGGLE)
         self.IndicatorSetForeground(2, wx.RED)
         self.StyleSetSpec(stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % faces)
 
         # Python styles
-        
+
         # White space
         self.StyleSetSpec(stc.STC_P_DEFAULT, "face:%(mono)s,size:%(size)d" % faces)
         # Comment
@@ -145,15 +145,15 @@ class Editor(stc.StyledTextCtrl):
         self.StyleSetSpec(stc.STC_P_COMMENTBLOCK, "face:%(mono)s,fore:#990000,back:#C0C0C0,italic,size:%(size)d" % faces)
         # End of line where string is not closed
         self.StyleSetSpec(stc.STC_P_STRINGEOL, "face:%(mono)s,fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % faces)
-            
+
     def SmartIndent(self):
         """Handles smart indentation for the editor"""
         # Read settings from the config file
-        
+
         # Suggestion: instead of indent_amount and use_tab, maybe just
         # have one config value, specifying what is to be used as indent.
         # -bunburya
-        
+
         indent_amount = int(self.conf["indent"])
         usetab = self.conf["usetab"]
 
@@ -161,10 +161,10 @@ class Editor(stc.StyledTextCtrl):
         last_line = split_comments(self.GetLine(last_line_no))[0]
         self.NewLine()
         indent_level = self.GetLineIndentation(last_line_no) // indent_amount
-        
+
         if last_line.rstrip().endswith(':'):
             indent_level += 1
-        elif any(last_line.lstrip().startswith(token) 
+        elif any(last_line.lstrip().startswith(token)
                  for token in ["return", "break", "yield"]):
             indent_level = max([indent_level - 1, 0])
 
@@ -175,14 +175,14 @@ class Editor(stc.StyledTextCtrl):
 
         self.AddText(indent)
         print self.conf
-    
+
     def AutoComp(self, event, keycode):
         """TODO:
         - If you indent (via tab or SmartIndent) and then autocomplete,
           it seems that the program automatically indents again after
           printing the word.
         - Properly handle uppercase; the current implementation ignores
-          caps lock.  
+          caps lock.
         """
         if keycode == wx.WXK_BACK:
             self.autocomp.back()
@@ -201,13 +201,19 @@ class Editor(stc.StyledTextCtrl):
         if choices:
             choices.sort()
             self.AutoCompShow(self.autocomp.len_entered-1, ' '.join(choices))
-    
-        
+
     def OnKeyDown(self, event):
         """Defines events for when the user presses a key"""
         key = event.GetKeyCode()
         control = event.ControlDown()
         alt = event.AltDown()
+
+        number_keys = [49, 50, 51, 52, 53, 54, 56, 57, 58]
+
+        if alt and key in number_keys:
+                index = number_keys.index(key)
+                self.GetParent().GetParent().SetSelection(index)
+
         if key == wx.WXK_RETURN and not control and not alt:
             self.SmartIndent()
         else:
@@ -219,12 +225,12 @@ class Editor(stc.StyledTextCtrl):
         if self.GetSelectedText():
             return True
         return False
-    
+
     def CanCopy(self):
         """ Returns true if there's a selection that can be copied"""
         """ Uses CanCut could be altered for its own checking if required"""
         return self.CanCut()
-    
+
     def CanPaste(self):
         """ Returns ture if the clipboard contains text"""
         """ Note: I dont know at present how to check clipboard for contents"""
@@ -234,16 +240,16 @@ class Editor(stc.StyledTextCtrl):
         """ Returns true if there's a selection that can be deleted"""
         """ Uses CanCut could be altered for its own checking if required"""
         return self.CanCut()
-        
+
     def load_file(self, path):
         """Loads a new file"""
         self.LoadFile(path)
         self.filepath= path
-        
+
     def save_file(self):
         """Saves the current file"""
         return self.SaveFile(self.filepath)
-    
+
     def save_file_as(self, filepath):
         """Save the current file as a new filepath"""
         self.filepath= filepath
@@ -252,7 +258,7 @@ class Editor(stc.StyledTextCtrl):
 if __name__=='__main__':
     """Adds the editor to the frame"""
     import ide_test_app as wx_app
-    import ide_simple_frame 
+    import ide_simple_frame
     app = wx_app.Wx_App(False)
     frame= ide_simple_frame.SimpleFrame(None, title= "Testing editor")
     panel= ide_simple_frame.TestPanel(frame)
