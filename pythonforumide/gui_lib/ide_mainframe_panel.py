@@ -20,6 +20,7 @@ class MainFramePanel(wx.Panel):
     def __init__(self, *args, **kwargs):
         """Initializes the panel"""
         super(MainFramePanel, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_KEY_UP, self.on_key_up)
         self._sizer = wx.BoxSizer(wx.VERTICAL)
         self._create_toolbar()
         self._create_notebook_panel()
@@ -27,6 +28,19 @@ class MainFramePanel(wx.Panel):
         self._create_first_tab()
         self.SetSizer(self._sizer)
         self.Layout()
+
+    def on_key_up(self, event):
+        key_code = event.GetKeyCode()
+
+        number_keys = [49, 50, 51, 52, 53, 54, 56, 57, 58]
+
+        if event.AltDown():
+            if key_code in number_keys:
+                index = number_keys.index(key_code)
+                #~ print index
+                self.notebook.SetSelection(index)
+
+        event.Skip()
 
     def _create_toolbar(self):
         """Creates a toolbar"""
