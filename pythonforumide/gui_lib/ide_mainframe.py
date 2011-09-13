@@ -218,8 +218,10 @@ class MainFrame(wx.Frame):
             if self.editor_tab_get_editor().GetModify() == 1:
                 return self.ask_exit()
 
+            self._store_config_settings()
             return self.Destroy()
         except AttributeError:
+            self._store_config_settings()
             return self.Destroy()
 
     def file_dialog(self, prompt, style):
