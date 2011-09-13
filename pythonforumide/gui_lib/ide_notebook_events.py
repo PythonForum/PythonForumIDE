@@ -44,9 +44,31 @@ class NotebookEvents(object):
         event.Skip()
         wx.CallAfter(self.notebook.editor_tab_name_untitled_tabs)
 
+    def ask_close(self, index):
+        dial = wx.MessageDialog(None, "Do you really want to close this page?",
+                                "Close page", wx.YES_NO | wx.ICON_QUESTION)
+
+        if dial.ShowModal() == wx.ID_YES:
+            self.close_accepted = True
+            return self.notebook.DeletePage(index)
+
     def _on_page_closing(self, event):
         """Called when tab is closed"""
-        new_index= event.GetSelection()
-        if not new_index:
-            self.notebook._active_editor = None
-        event.Skip()
+
+        #close_accepted == True means no asking to close page
+
+        try:
+            if self.close_accepted:
+                self.close_accepted = False
+                return
+        except AttributeError:
+            index = event.GetSelection()
+
+            if self.notebook._active_editor.GetModify() == 1:
+                event.Veto()
+                return self.ask_close(index)
+
+            if not index:
+                self.notebook._active_editor = None
+
+            event.Skip()
