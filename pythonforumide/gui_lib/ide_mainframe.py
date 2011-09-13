@@ -47,8 +47,8 @@ class MainFrame(wx.Frame):
 
     def _create_main_panel(self):
         self._sizer.AddSpacer((-1, 2))
-        ctrl= MainFramePanel(self._frame_panel)
-        self._sizer.Add(ctrl, 1, wx.EXPAND|wx.LEFT|wx.RIGHT, 2)
+        ctrl = MainFramePanel(self._frame_panel)
+        self._sizer.Add(ctrl, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 2)
         self.mainframe_panel = ctrl
         self._sizer.AddSpacer((-1, 2))
         self.notebook = ctrl.notebook
@@ -57,21 +57,20 @@ class MainFrame(wx.Frame):
     def _apply_config_settings(self):
         """ Applys the stored config values"""
         self.SetSize((self._config["MainFrame.Width"],
-                           self._config["MainFrame.Height"]))
+                      self._config["MainFrame.Height"]))
         self.MoveXY(self._config["MainFrame.XPos"],
-                           self._config["MainFrame.YPos"])
-        self.menu_view_toolbar_show(
-                self._config["MainMenu.View.Toolbar.Show"])
+                    self._config["MainFrame.YPos"])
+        self.menu_view_toolbar_show(self._config["MainMenu.View.Toolbar.Show"])
 
     def _store_config_settings(self):
         """ Stores the current config values"""
         width, height = self.GetSizeTuple()
-        self._config["MainFrame.Width"]= width
-        self._config["MainFrame.Height"]= height
+        self._config["MainFrame.Width"] = width
+        self._config["MainFrame.Height"] = height
         xpos, ypos = self.GetPositionTuple()
-        self._config["MainFrame.XPos"]= xpos
-        self._config["MainFrame.YPos"]= ypos
-        self._config["MainMenu.View.Toolbar.Show"]= \
+        self._config["MainFrame.XPos"] = xpos
+        self._config["MainFrame.YPos"] = ypos
+        self._config["MainMenu.View.Toolbar.Show"] = \
                 self.MenuBar.IsChecked(ID_SHOW_TOOLBAR)
 
     def editor_tab_get_editor(self):
@@ -80,12 +79,12 @@ class MainFrame(wx.Frame):
 
     def editor_open_file(self):
         """ Opens a dialof to chose the file to open"""
-        dirname, filename = self.file_dialog('Open a file', wx.OPEN)
+        dirname, filename = self.file_dialog("Open a file", wx.OPEN)
         self.notebook.editor_tab_open_file(dirname, filename)
 
     def editor_save(self):
         """Saves the currently active editor file"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor.filepath:
             active_editor.save_file()
         else:
@@ -93,8 +92,7 @@ class MainFrame(wx.Frame):
 
     def editor_save_as(self):
         """Save as for the currently active editor file"""
-        dirname, filename = self.file_dialog('Save file as',
-                                                           wx.SAVE)
+        dirname, filename = self.file_dialog("Save file as", wx.SAVE)
         if dirname and filename:
             path = os.path.join(dirname, filename)
             if path:
@@ -105,25 +103,25 @@ class MainFrame(wx.Frame):
 
     def editor_undo(self):
         """Undo changes in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.Undo()
 
     def editor_redo(self):
         """Redo changes in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.Redo()
 
     def editor_cut(self):
         """Cut changes in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.Cut()
 
     def editor_copy(self):
         """Copy changes in active editor"""
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         if active_editor:
             active_editor.Copy()
 
@@ -149,7 +147,7 @@ class MainFrame(wx.Frame):
         """ Search and replace in active editor"""
         # Create a search frame and hook into the caller.
         # Allows this frame to be destroyed by the main window on close.
-        active_editor= self.editor_tab_get_editor()
+        active_editor = self.editor_tab_get_editor()
         replace_frame = ReplaceFrame(active_editor, self,
                                      title = "Find and Replace",
                                      size = (410, 150))
@@ -166,8 +164,8 @@ class MainFrame(wx.Frame):
 #        run_editor.sizer.Add(run_panel, 1, wx.EXPAND)
 #        run_editor.Layout()
 
-        run_panel= self.console
-        active_editor= self.editor_tab_get_editor()
+        run_panel = self.console
+        active_editor = self.editor_tab_get_editor()
 
         if active_editor.filepath:
             if active_editor.GetModify():
@@ -176,8 +174,8 @@ class MainFrame(wx.Frame):
             run_panel.WriteText("Running %s" % filename)
             run_panel.Newline()
             reactor.spawnProcess(PythonProcessProtocol(run_panel),
-                                          get_python_exe(),
-                                          ["python", str(active_editor.filepath)])
+                                 get_python_exe(),
+                                 ["python", str(active_editor.filepath)])
 
         else:
             run_panel.WriteText("Running unsaved script.")
@@ -185,11 +183,11 @@ class MainFrame(wx.Frame):
             script = StringIO()
             script.write(active_editor.GetText())
             script.seek(0)
-            scr = script.read().replace("\r",'')
+            scr = script.read().replace("\r", '')
 
             reactor.spawnProcess(PythonProcessProtocol(run_panel),
-                                          get_python_exe(),
-                                            ["python", "-c", scr])
+                                 get_python_exe(),
+                                 ["python", "-c", scr])
 
         return run_panel
 #===============================================================================
