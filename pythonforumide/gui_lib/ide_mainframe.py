@@ -155,6 +155,15 @@ class MainFrame(wx.Frame):
 
     def on_run(self):
         """Runs selected code in a new window."""
+
+        # Check if pywin32 is installed on Windows users. If not, alert them.
+        if os.name == "nt":  #Check if the user is running Windows.
+            try:
+                import win32api
+            except ImportError:
+                return wx.MessageBox("You have to install win32",
+                                     "pywin32 missing")
+
         # Create a test frame and hook into the caller.
         # Allows this frame to be destroyed by the main window on close.
         reactor = wx.GetApp().this_reactor
