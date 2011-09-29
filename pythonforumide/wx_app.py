@@ -75,5 +75,10 @@ class ListenFactory(Factory):
     protocol = ListenProtocol
     
 if __name__ == '__main__':
+    if os.name == 'nt':
+        try:
+            import win32api
+        except ImportError:
+            raise Exception("Pywin32 required.")
     wx_app = Wx_App(False)
     wx_app.start_reactor()
