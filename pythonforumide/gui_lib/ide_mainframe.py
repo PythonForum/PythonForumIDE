@@ -161,7 +161,7 @@ class MainFrame(wx.Frame):
             try:
                 import win32api
             except ImportError:
-                return wx.MessageBox("You have to install win32",
+                return wx.MessageBox("To run files you need to install win32api",
                                      "pywin32 missing")
 
         # Create a test frame and hook into the caller.
