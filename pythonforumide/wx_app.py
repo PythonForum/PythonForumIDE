@@ -5,6 +5,8 @@ Created on 31 Jul 2011
 @reviewer: David
 """
 
+import os
+
 import wx
 import gui_lib.ide_mainframe as ide_mainframe
 import gui_lib.ide_mainframe_events as ide_mainframe_events
