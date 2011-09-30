@@ -21,6 +21,7 @@ from utils.version import get_free_port
 
 class Wx_App(wx.App):
     """Sets the editor up and the ports""" #Not sure if correct description
+
     def __init__(self, *args, **kwargs):
         """Creates a wx App"""
         super(Wx_App, self).__init__(*args, **kwargs)
@@ -28,54 +29,52 @@ class Wx_App(wx.App):
         self._create_port()
         self._set_up_reactor()
         self._create_mainframe()
-        
+
     def _create_config(self):
         """Set up config"""
         self.config = IdeConfig()
-        
+
     def _create_port(self):
         """Creates a free port"""
         self._port = get_free_port()
-        
+
     def get_port(self):
         return self._port
-    
+
     def _set_up_reactor(self):
         """Set's up the reactor"""
         reactor.registerWxApp(self)
         reactor.listenTCP(self._port, ListenFactory())
-        #frame.Maximize() #Left commented to stop it getting on my nerves.
-        
+
     def start_reactor(self):
         """
         Starts the reactor, bind a reference to it locally."""
         print "Port: %s" % (self.get_port())
         self.this_reactor = reactor
         reactor.run()
-        
+
     def _create_mainframe(self):
         """Creates the mainframe"""
         self.mainframe = ide_mainframe.MainFrame(None, title='PF-IDE - 0.1a')
         ide_mainframe_events.MainFrameEvents(self.mainframe)
-        
+
     def OnExit(self):
         """Handles the event that closes the IDE"""
         print ("App closing")
         self.config.update_configfile()
-        
-        
+
 class ListenProtocol(Protocol):
     """Handles connections"""
     def connectionMade(self):
         print "Got connection!!!!"
-        
+
     def connectionLost(self, reason):
         print "Connection closed."
 
 class ListenFactory(Factory):
     """Handles Twisted listen protocols"""
     protocol = ListenProtocol
-    
+
 if __name__ == '__main__':
     if os.name == 'nt':
         try:
