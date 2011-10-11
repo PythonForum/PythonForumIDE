@@ -167,9 +167,12 @@ class MainFrame(wx.Frame):
 
         run_panel = self.console
 
-        #If the Console is not viewable, make it viewable to run the file
-        if run_panel.GetParent().GetParent()._minimized:
-            run_panel.GetParent().GetParent().restore_state()
+        # If the console is closed or minimized, it should be made viewable
+        # and maximized to run the file
+        run_headered_panel = run_panel.GetParent().GetParent()
+        run_headered_panel.Show(True)
+        if run_headered_panel._minimized:
+            run_headered_panel.restore_state()
 
         active_editor = self.editor_tab_get_editor()
 
@@ -183,7 +186,7 @@ class MainFrame(wx.Frame):
                                  get_python_exe(),
                                  ["python", str(active_editor.filepath)])
 
-        else:
+        else: # If the current file is not saved, run unsaved script
             run_panel.WriteText("Running unsaved script.")
             run_panel.Newline()
             script = StringIO()
