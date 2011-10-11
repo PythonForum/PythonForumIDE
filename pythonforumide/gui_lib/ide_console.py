@@ -22,7 +22,7 @@ class ConsolePanel(wx.Panel):
 
     def _create_rich_text_ctrl(self):
         """Creates the textbox for the console"""
-        self._rt_ctrl = RichTextCtrl(self, style = wx.TE_READONLY)
+        self._rt_ctrl = RichTextCtrl(self, style=wx.TE_READONLY)
         monospace_font = wx.Font(10, wx.MODERN, wx.NORMAL, wx.NORMAL,
                                  False, u"Monospace")
         self._rt_ctrl.SetFont(monospace_font)

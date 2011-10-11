@@ -55,7 +55,7 @@ class Wx_App(wx.App):
 
     def _create_mainframe(self):
         """Creates the mainframe"""
-        self.mainframe = ide_mainframe.MainFrame(None, title='PF-IDE - 0.1a')
+        self.mainframe = ide_mainframe.MainFrame(None, title="PF-IDE - 0.1a")
         ide_mainframe_events.MainFrameEvents(self.mainframe)
 
     def OnExit(self):

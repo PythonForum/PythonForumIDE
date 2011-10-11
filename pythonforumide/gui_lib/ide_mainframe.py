@@ -166,6 +166,11 @@ class MainFrame(wx.Frame):
 #       run_editor.Layout()
 
         run_panel = self.console
+
+        #If the Console is not viewable, make it viewable to run the file
+        if run_panel.GetParent().GetParent()._minimized:
+            run_panel.GetParent().GetParent().restore_state()
+
         active_editor = self.editor_tab_get_editor()
 
         if active_editor.filepath:
