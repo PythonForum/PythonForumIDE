@@ -1,30 +1,31 @@
 """
 @author: bunburya
 """
-
+from sys import builtin_module_names
 from keyword import kwlist
 
-keywords = set(kwlist)
-builtins = set(__builtins__.keys())
 
 class CodeCompletion(object):
     """A backend class for code completion.
     """
     
     valid_ch = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
+
+    keywords = set(kwlist)
+    builtins = set(__builtins__.keys())
+    builtin_modules = set(builtin_module_names)
     
     def __init__(self, *modules):
         self._suggestions = set()
         self._cache = set()
         self._key = []
+        self._suggestions.update(
+                self.keywords,
+                self.builtins,
+                self.builtin_modules
+                )
         for mod in modules:
             self.add_module(mod)
-    
-    def add_builtins(self):
-        self._suggestions.update(builtins)
-    
-    def add_keywords(self):
-        self._suggestions.update(keywords)
     
     def add_module(self, module):
         """Adds the variable and method names from a module to the pool
