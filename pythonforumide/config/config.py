@@ -2,18 +2,19 @@
 """
 Created on Sat Jul 16 21:01:15 2011
 @author: Jakob, Somelauw
-@reviewer: David, SomeLauw
+@reviewer: David, Somelauw
 """
 
 from __future__ import print_function
 import os.path
+import ConfigParser #Ugly config file :(
 
 try:
     import yaml #Pretty config file :D
     has_yaml = True
 except ImportError:
-    import ConfigParser #Ugly config file :(
     has_yaml = False
+
 
 def file_config(profile):
     """
