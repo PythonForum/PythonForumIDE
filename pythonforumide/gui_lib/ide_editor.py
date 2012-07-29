@@ -157,7 +157,7 @@ class Editor(stc.StyledTextCtrl):
         # Determine how to indent
         usetab = self.conf["usetab"]
         if usetab:
-            indent_amount = 1
+            indent_amount = self.GetTabWidth()
             indent = "\t"
         else:
             indent_amount = int(self.conf["indent"])
