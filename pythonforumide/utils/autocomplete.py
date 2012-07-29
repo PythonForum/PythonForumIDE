@@ -2,12 +2,9 @@
 @author: bunburya
 """
 
-# maybe move these to a separate file eventually
-keywords = set(['and ', 'elif ', 'is ', 'global ', 'pass', 'if ',
-    'from ', 'raise ', 'for ', 'except ', 'finally', 'print ',
-    'import ', 'return ', 'exec ', 'else', 'break', 'not ', 'class ',
-    'assert ', 'in ', 'yield ', 'try', 'while ', 'continue', 'del ',
-    'or ', 'def ', 'lambda '])
+from keyword import kwlist
+
+keywords = set(kwlist)
 builtins = set(__builtins__.keys())
 
 class CodeCompletion(object):
