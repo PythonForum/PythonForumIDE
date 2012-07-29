@@ -1,5 +1,5 @@
 """
-@author: Jakob, David, bunburya, confab
+@author: Jakob, David, bunburya, confab, Somelauw
 @reviewer: Somelauw, ghoulmaster, David
 """
 
@@ -9,21 +9,21 @@ sys.path.append('..')
 #
 
 from utils.textutils import split_comments
-from utils.interpreter import PythonProcessProtocol
-from utils.version import get_python_exe, introduction
+#from utils.interpreter import PythonProcessProtocol
+#from utils.version import get_python_exe, introduction
 from utils.autocomplete import CodeCompletion
 import wx.richtext
 import wx.stc as stc
-import os.path
+#import os.path
 import wx
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+#try:
+    #from cStringIO import StringIO
+#except ImportError:
+    #from StringIO import StringIO
 
-from ide_simple_frame import SimpleFrame
-from ide_replace_frame import ReplaceFrame
+#from ide_simple_frame import SimpleFrame
+#from ide_replace_frame import ReplaceFrame
 
 #TODO: make customisable font and sizes. Perhaps maked this named tuple?
 faces = { 'times': 'Times',
@@ -153,28 +153,34 @@ class Editor(stc.StyledTextCtrl):
         # Suggestion: instead of indent_amount and use_tab, maybe just
         # have one config value, specifying what is to be used as indent.
         # -bunburya
+        # ^^ Please make a ticket on github.
 
-        indent_amount = int(self.conf["indent"])
+        # Determine how to indent
         usetab = self.conf["usetab"]
+        if usetab:
+            indent = "\t"
+        else:
+            indent_amount = int(self.conf["indent"])
+            indent = indent_amount * " "
+
+        # The column in which we can find the cursor
+        cursorpos = self.GetColumn(self.GetCurrentPos())
 
         last_line_no = self.GetCurrentLine()
         last_line = split_comments(self.GetLine(last_line_no))[0]
         self.NewLine()
         indent_level = self.GetLineIndentation(last_line_no) // indent_amount
 
-        if last_line.rstrip().endswith(':'):
+        # Should we increase or decrease the indent level
+        colonpos = last_line.find(":")
+        if colonpos >= 0 and cursorpos > colonpos:
             indent_level += 1
         elif any(last_line.lstrip().startswith(token)
                  for token in ["return", "break", "yield"]):
             indent_level = max([indent_level - 1, 0])
 
-        if usetab:
-            indent = "\t" * indent_level
-        else:
-            indent = indent_amount * " " * indent_level
-
-        self.AddText(indent)
-        print self.conf
+        self.AddText(indent * indent_level)
+        #print self.conf
 
     def AutoComp(self, event, keycode):
         """TODO:
