@@ -88,7 +88,8 @@ class MainFrame(wx.Frame):
         if active_editor.filepath:
             active_editor.save_file()
         else:
-            self.save_as_active_editor()
+            #self.save_as_active_editor() # Function doesn't exist?
+            self.editor_save_as()
 
     def editor_save_as(self):
         """Save as for the currently active editor file"""
@@ -214,7 +215,7 @@ class MainFrame(wx.Frame):
     def on_exit(self):
         """Handles the event triggered by the user to exit"""
         try:
-            current_text = self.editor_tab_get_editor().GetText()
+            #current_text = self.editor_tab_get_editor().GetText()
 
             #Right now, this check if the current open file (the viewable tab)
             #has been saved or not. If not, prompt the user about quitting

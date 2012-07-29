@@ -180,7 +180,6 @@ class Editor(stc.StyledTextCtrl):
             indent_level = max([indent_level - 1, 0])
 
         self.AddText(indent * indent_level)
-        #print self.conf
 
     def AutoComp(self, event, keycode):
         """TODO:
