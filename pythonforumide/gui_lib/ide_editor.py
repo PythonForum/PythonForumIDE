@@ -153,11 +153,11 @@ class Editor(stc.StyledTextCtrl):
         # Suggestion: instead of indent_amount and use_tab, maybe just
         # have one config value, specifying what is to be used as indent.
         # -bunburya
-        # ^^ Please make a ticket on github.
 
         # Determine how to indent
         usetab = self.conf["usetab"]
         if usetab:
+            indent_amount = 1
             indent = "\t"
         else:
             indent_amount = int(self.conf["indent"])
