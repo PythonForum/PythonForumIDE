@@ -43,6 +43,7 @@ class MainFramePanel(wx.Panel):
         ctrl = headered_panel.add_panel_ctrl(NoteBookPanel, "", 100)
         NotebookEvents(ctrl)
         self.notebook = ctrl.notebook
+        self.notebook.parent = headered_panel
 
     def _create_console(self):
         """Create a console window"""
