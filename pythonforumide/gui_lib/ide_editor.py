@@ -149,25 +149,18 @@ class Editor(stc.StyledTextCtrl):
         """Handles smart indentation for the editor"""
         # Read settings from the config file
 
-        # Suggestion: instead of indent_amount and use_tab, maybe just
-        # have one config value, specifying what is to be used as indent.
-        # -bunburya
-
         # Determine how to indent
-        usetab = self.conf["usetab"]
+        usetab = self.conf.getboolean("editing", "usetab")
         if usetab:
             indent_amount = self.GetTabWidth()
             indent = "\t"
         else:
-            indent_amount = int(self.conf["indent"])
+            indent_amount = self.conf.getint("editing", "indent")
             indent = indent_amount * " "
 
-        # The column in which we can find the cursor
         cursorpos = self.GetColumn(self.GetCurrentPos())
-
         last_line_no = self.GetCurrentLine()
         last_line = split_comments(self.GetLine(last_line_no))[0]
-        self.NewLine()
         indent_level = self.GetLineIndentation(last_line_no) // indent_amount
 
         # Should we increase or decrease the indent level
@@ -178,6 +171,8 @@ class Editor(stc.StyledTextCtrl):
                  for token in ["return", "break", "yield"]):
             indent_level = max([indent_level - 1, 0])
 
+        # Perform the actual smartindent
+        self.NewLine()
         self.AddText(indent * indent_level)
 
     def AutoComp(self, event, keycode):
