@@ -1,3 +1,8 @@
+"""
+Created on Mon Jul 16 2012
+@author: bunburya
+"""
+
 from os.path import join, dirname
 from ConfigParser import ConfigParser
 

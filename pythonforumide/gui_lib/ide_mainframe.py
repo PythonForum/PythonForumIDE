@@ -2,7 +2,7 @@
 """
 Created on Wed Jul 27 17:36:42 2011
 
-@author: jakob, David, confab
+@author: jakob, David, confab, bunburya
 """
 import wx
 import os
