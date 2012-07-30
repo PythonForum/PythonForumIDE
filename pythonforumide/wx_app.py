@@ -10,7 +10,7 @@ import os
 import wx
 import gui_lib.ide_mainframe as ide_mainframe
 import gui_lib.ide_mainframe_events as ide_mainframe_events
-from config.config import IdeConfig
+from config.config import read_config, write_config
 
 from twisted.internet import wxreactor
 wxreactor.install()
@@ -32,7 +32,7 @@ class Wx_App(wx.App):
 
     def _create_config(self):
         """Set up config"""
-        self.config = IdeConfig()
+        self.config = read_config()
 
     def _create_port(self):
         """Creates a free port"""
@@ -61,7 +61,7 @@ class Wx_App(wx.App):
     def OnExit(self):
         """Handles the event that closes the IDE"""
         print ("App closing")
-        self.config.update_configfile()
+        write_config(self.config)
 
 class ListenProtocol(Protocol):
     """Handles connections"""

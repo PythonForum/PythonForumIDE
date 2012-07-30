@@ -56,22 +56,28 @@ class MainFrame(wx.Frame):
 
     def _apply_config_settings(self):
         """ Applys the stored config values"""
-        self.SetSize((self._config["MainFrame.Width"],
-                      self._config["MainFrame.Height"]))
-        self.MoveXY(self._config["MainFrame.XPos"],
-                    self._config["MainFrame.YPos"])
-        self.menu_view_toolbar_show(self._config["MainMenu.View.Toolbar.Show"])
+        self.SetSize((
+            self._config.getint('interface', 'width'),
+            self._config.getint('interface', 'height')
+            ))
+        self.MoveXY(
+            self._config.getint('interface', 'x_pos'),
+            self._config.getint('interface', 'y_pos')
+            )
+        self.menu_view_toolbar_show(
+                self._config.getboolean('interface', 'show_toolbar')
+                )
 
     def _store_config_settings(self):
         """ Stores the current config values"""
         width, height = self.GetSizeTuple()
-        self._config["MainFrame.Width"] = width
-        self._config["MainFrame.Height"] = height
+        self._config.set('interface', 'width', width)
+        self._config.set('interface', 'height', height)
         xpos, ypos = self.GetPositionTuple()
-        self._config["MainFrame.XPos"] = xpos
-        self._config["MainFrame.YPos"] = ypos
-        self._config["MainMenu.View.Toolbar.Show"] = \
-                self.MenuBar.IsChecked(ID_SHOW_TOOLBAR)
+        self._config.set('interface', 'x_pos', xpos)
+        self._config.set('interface', 'y_pos', ypos)
+        self._config.set('interface', 'show_toolbar',
+                self.MenuBar.IsChecked(ID_SHOW_TOOLBAR))
 
     def editor_tab_get_editor(self):
         """Returns the currently active editor instance from notebook"""
