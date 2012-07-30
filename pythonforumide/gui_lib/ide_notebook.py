@@ -40,6 +40,7 @@ class NoteBook(fnb.FlatNotebook):
 
     def editor_tab_new(self, page_name=""):
         """Opens a new editor tab"""
+        self.parent.show(True)
         editor_panel = EditorPanel(self)
         self.AddPage(editor_panel, page_name)
         self._active_editor = editor_panel.editor
