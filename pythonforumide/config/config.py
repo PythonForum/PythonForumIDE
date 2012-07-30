@@ -20,7 +20,7 @@ def get_default_config():
     c.set('interface', 'show_toolbar', 'yes')
     c.add_section('editing')
     c.set('editing', 'indent', '4')
-    c.set('editing', 'usetab', 'yes')
+    c.set('editing', 'usetab', 'no')
     return c
 
 def read_config_from(fname):
