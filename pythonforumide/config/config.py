@@ -1,14 +1,33 @@
 """
 Created on Mon Jul 16 2012
-@author: bunburya
+@author: bunburya, somelauw
+
+Tested on:
+    - Linux
 """
 
-from os.path import join, dirname
+import os
+import platform
+
 from ConfigParser import ConfigParser
 
 def get_config_filename():
-    """This is just a placeholder for now."""
-    return join(dirname(__file__), 'pf_ide.cfg')
+    """
+    Finds the location of the config file
+
+    Uses environment variables to find the right location. 
+    On unix platforms it follows the xdg_specification.
+    """
+
+    system = platform.system()
+    if system == "Windows":
+        configdir = (os.environ.get("%LOCALAPPDATA%") or
+                     os.environ.get("%APPDATA%"))
+    else:
+        configdir = (os.environ.get("XDG_CONFIG_HOME") or
+                     os.path.join(os.environ["HOME"], ".config"))
+
+    return os.path.join(configdir, "pf_ide", "config.cfg")
 
 def get_default_config():
     c = ConfigParser()
@@ -33,6 +52,11 @@ def read_config():
     return read_config_from(fname)
 
 def write_config_to(c, fname):
+    # Make sure the directory exists
+    dirname = os.path.dirname(fname)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
+
     with open(fname, 'w') as f:
         c.write(f)
 
